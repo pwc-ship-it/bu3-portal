@@ -1,0 +1,9 @@
+{
+  "name": "bu3-site-directory",
+  "version": "1.0.0",
+  "private": true,
+  "description": "BU3 / 회사 사이트 링크 모음 포털",
+  "dependencies": {
+    "@vercel/kv": "^1.0.1"
+  }
+}
