@@ -23,7 +23,7 @@
     --internal:#ffb648;
     --internal-soft:rgba(255,182,72,0.12);
     --danger:#ff6b81;
-    --radius:14px;
+    --radius:12px;
     --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;
     --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
   }
@@ -51,7 +51,7 @@
     z-index:1;
     width:100%;
     margin:0 auto;
-    padding:22px 26px 40px;
+    padding:20px 24px 36px;
   }
 
   .topbar{
@@ -64,18 +64,19 @@
   }
   .brand{display:flex;align-items:center;gap:14px;}
   .brand-mark{
-    width:46px;height:46px;flex:none;
-    border-radius:12px;
+    width:44px;height:44px;flex:none;
+    border-radius:11px;
     background:linear-gradient(135deg,var(--company),var(--bu3));
     display:flex;align-items:center;justify-content:center;
     font-family:var(--mono);
     font-weight:800;
-    font-size:16px;
+    font-size:15px;
     color:#0a0c10;
+    user-select:none;
   }
   .brand h1{
     margin:0;
-    font-size:26px;
+    font-size:24px;
     letter-spacing:0.2px;
     font-weight:800;
     display:flex;
@@ -84,26 +85,33 @@
   }
   .brand h1 .total{
     font-family:var(--mono);
-    font-size:14px;
+    font-size:13.5px;
     font-weight:600;
     color:var(--text-faint);
   }
   .brand p{
     margin:2px 0 0;
-    font-size:13.5px;
+    font-size:13px;
     color:var(--text-dim);
   }
+  .admin-badge{
+    display:none;align-items:center;gap:5px;font-family:var(--mono);font-size:11px;font-weight:700;
+    color:var(--internal);background:var(--internal-soft);padding:4px 10px;border-radius:20px;
+  }
+  body.admin-mode .admin-badge{display:inline-flex;}
+  body:not(.admin-mode) .admin-only{display:none !important;}
+
   .topbar .controls{display:flex;gap:10px;align-items:center;}
   .search-wrap{position:relative;display:flex;align-items:center;}
   .search-wrap svg{position:absolute;left:13px;width:16px;height:16px;color:var(--text-faint);pointer-events:none;}
   #search{
-    width:260px;background:var(--bg-elev);border:1px solid var(--border);color:var(--text);
-    border-radius:11px;padding:11px 14px 11px 36px;font-size:14.5px;outline:none;transition:border-color .15s;
+    width:240px;background:var(--bg-elev);border:1px solid var(--border);color:var(--text);
+    border-radius:10px;padding:10px 13px 10px 34px;font-size:14px;outline:none;transition:border-color .15s;
   }
   #search:focus{border-color:var(--company);}
   #search::placeholder{color:var(--text-faint);}
   .btn{
-    border:none;cursor:pointer;border-radius:11px;font-size:14.5px;font-weight:700;padding:11px 18px;
+    border:none;cursor:pointer;border-radius:10px;font-size:14px;font-weight:700;padding:10px 16px;
     display:inline-flex;align-items:center;gap:7px;font-family:var(--sans);
     transition:transform .1s, opacity .15s, background .15s;
   }
@@ -116,121 +124,82 @@
   .btn-danger{background:rgba(255,107,129,0.12);color:var(--danger);}
   .btn-danger:hover{background:rgba(255,107,129,0.22);}
 
-  .tabgroups{
-    display:flex;
-    gap:34px;
-    align-items:flex-start;
-    flex-wrap:wrap;
-    margin-bottom:22px;
+  /* ---------- Board: 4 columns in one row ---------- */
+  .board{
+    display:grid;
+    grid-template-columns:repeat(4, minmax(0,1fr));
+    gap:18px;
+    align-items:start;
   }
-  .tabgroup-divider{
-    width:1px;
-    align-self:stretch;
-    background:var(--border-soft);
-    margin-top:26px;
-  }
-  .tabgroup{display:flex;flex-direction:column;gap:9px;}
-  .tabgroup-label{
-    font-family:var(--mono);
-    font-size:13px;
-    font-weight:700;
-    color:var(--text-dim);
-    text-transform:uppercase;
-    letter-spacing:0.08em;
-    padding-left:3px;
-  }
-  .tabgroup.co .tabgroup-label{color:var(--company);}
-  .tabgroup.bu .tabgroup-label{color:var(--bu3);}
-  .tabgroup-buttons{display:flex;gap:9px;}
-  .tab-btn{
-    padding:13px 20px;
-    border-radius:13px;
-    border:1.5px solid var(--border);
-    background:var(--bg-elev);
-    color:var(--text-dim);
-    cursor:pointer;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    gap:3px;
-    min-width:128px;
-    transition:border-color .15s, background .15s, color .15s;
-  }
-  .tab-btn .lbl{font-size:15.5px;font-weight:700;display:flex;align-items:center;gap:6px;}
-  .tab-btn .lbl svg{width:14px;height:14px;}
-  .tab-btn .n{font-family:var(--mono);font-size:12px;color:var(--text-faint);}
-  .tab-btn:hover{border-color:#3a4256;color:var(--text);}
-  .tab-btn.active.public{background:var(--public-soft);border-color:var(--public);color:var(--public);}
-  .tab-btn.active.internal{background:var(--internal-soft);border-color:var(--internal);color:var(--internal);}
-  .tab-btn.active .n{color:inherit;opacity:0.75;}
+  @media (max-width:1150px){ .board{grid-template-columns:repeat(2,1fr);} }
+  @media (max-width:620px){ .board{grid-template-columns:1fr;} }
 
-  .tiles{
-    display:flex;
-    flex-wrap:wrap;
-    gap:14px;
+  .col-label{
+    font-family:var(--mono);font-size:11.5px;font-weight:700;text-transform:uppercase;
+    letter-spacing:0.07em;color:var(--text-faint);text-align:center;margin-bottom:7px;
   }
+  .col-label.co{color:var(--company);}
+  .col-label.bu{color:var(--bu3);}
+
+  .hero{border-radius:12px;padding:12px 10px;margin-bottom:12px;text-align:center;}
+  .hero.public{background:var(--public-soft);border:1.5px solid var(--public);color:var(--public);}
+  .hero.internal{background:var(--bg-elev-2);border:1.5px solid var(--border);color:var(--text-dim);}
+  .hero .hname{font-size:15px;font-weight:800;}
+  .hero .hcount{font-family:var(--mono);font-size:11.5px;opacity:0.85;margin-top:2px;}
+
+  .tilegrid{display:flex;flex-wrap:wrap;gap:9px;align-items:flex-start;}
+  .tile-cell{flex:0 0 calc(50% - 4.5px);min-width:0;}
+
   .tile{
-    width:168px;
-    min-height:118px;
-    border-radius:var(--radius);
-    background:var(--bg-elev);
-    border:1.5px solid var(--border-soft);
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
-    gap:6px;
-    cursor:pointer;
-    position:relative;
-    padding:14px 10px;
-    transition:border-color .15s, transform .1s, background .15s;
-    text-decoration:none;
+    width:100%;min-height:88px;border-radius:var(--radius);background:var(--bg-elev);
+    border:1.5px solid var(--border-soft);display:flex;flex-direction:column;align-items:center;justify-content:center;
+    gap:5px;cursor:pointer;position:relative;padding:11px 6px;transition:border-color .15s, transform .1s;
   }
-  .tile:hover{border-color:var(--company);transform:translateY(-2px);}
+  .tile:hover{border-color:var(--company);transform:translateY(-1px);}
   .tile.bu3-tile:hover{border-color:var(--bu3);}
-  .tile .num{
-    font-family:var(--mono);
-    font-size:36px;
-    font-weight:800;
-    color:var(--company);
-    line-height:1;
-  }
+  .tile.open{border-color:var(--company);}
+  .tile.bu3-tile.open{border-color:var(--bu3);}
+  .tile .num{font-family:var(--mono);font-size:28px;font-weight:800;color:var(--company);line-height:1;}
   .tile.bu3-tile .num{color:var(--bu3);}
   .tile .name{
-    font-size:14.5px;
-    font-weight:700;
-    text-align:center;
-    color:var(--text);
-    text-transform:uppercase;
-    letter-spacing:0.02em;
-    line-height:1.25;
+    font-size:12.5px;font-weight:700;text-align:center;color:var(--text);text-transform:uppercase;
+    letter-spacing:0.01em;line-height:1.2;
   }
-  .tile.direct{gap:8px;}
+  .tile.direct{gap:7px;}
   .tile.direct .icon{
-    width:36px;height:36px;border-radius:10px;
-    background:var(--bg-elev-2);
-    display:flex;align-items:center;justify-content:center;
-    color:var(--text-dim);
+    width:30px;height:30px;border-radius:9px;background:var(--bg-elev-2);
+    display:flex;align-items:center;justify-content:center;color:var(--text-dim);
   }
-  .tile.direct .icon svg{width:17px;height:17px;}
-  .tile.direct .name{font-size:15.5px;text-transform:none;letter-spacing:0;}
+  .tile.direct .icon svg{width:15px;height:15px;}
+  .tile.direct .name{font-size:12.5px;text-transform:none;letter-spacing:0;}
 
-  .tile-actions{
-    position:absolute;top:7px;right:7px;
-    display:flex;gap:2px;
-    opacity:0;
-    transition:opacity .12s;
-  }
+  .tile-actions{position:absolute;top:6px;right:6px;display:flex;gap:2px;opacity:0;transition:opacity .12s;}
   .tile:hover .tile-actions{opacity:1;}
   .icon-btn{
-    width:26px;height:26px;display:flex;align-items:center;justify-content:center;background:none;border:none;
-    color:var(--text-faint);cursor:pointer;border-radius:7px;
+    width:22px;height:22px;display:flex;align-items:center;justify-content:center;background:none;border:none;
+    color:var(--text-faint);cursor:pointer;border-radius:6px;
   }
   .icon-btn:hover{background:var(--bg-elev-2);color:var(--text);}
   .icon-btn.danger:hover{color:var(--danger);}
-  .icon-btn svg{width:14px;height:14px;}
+  .icon-btn svg{width:12.5px;height:12.5px;}
+
+  .tile-expand{
+    margin-top:6px;background:var(--bg-elev-2);border:1px solid var(--border-soft);border-radius:10px;
+    padding:6px 9px;
+  }
+  .exp-row{display:flex;align-items:center;gap:5px;padding:5px 0;border-bottom:1px solid var(--border-soft);}
+  .exp-row:last-child{border-bottom:none;}
+  .exp-row .e-title{
+    flex:1;font-size:12px;font-weight:600;color:var(--text);text-decoration:none;min-width:0;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  }
+  .exp-row .e-title:hover{color:var(--company);}
+  .exp-row .e-actions{display:flex;gap:1px;flex:none;}
+  .exp-row .e-actions .icon-btn{width:19px;height:19px;}
+  .exp-row .e-actions .icon-btn svg{width:11px;height:11px;}
 
   .empty{text-align:center;padding:60px 20px;color:var(--text-faint);font-size:14px;}
+  .col .empty{padding:20px 6px;font-size:12px;}
 
   .results{display:flex;flex-direction:column;gap:10px;}
   .result-card{
@@ -248,18 +217,18 @@
   .result-card .r-actions{display:flex;gap:4px;}
 
   .tip{position:relative;display:inline-flex;color:var(--text-faint);cursor:default;}
-  .tip svg{width:14px;height:14px;}
+  .tip svg{width:13px;height:13px;}
   .tip::after{
     content:attr(data-tip);position:absolute;left:50%;bottom:130%;transform:translateX(-50%) translateY(4px);
-    background:#2a3040;color:var(--text);font-size:12.5px;line-height:1.4;padding:8px 11px;border-radius:8px;
-    width:max-content;max-width:240px;white-space:normal;box-shadow:0 6px 20px rgba(0,0,0,0.4);
+    background:#2a3040;color:var(--text);font-size:12px;line-height:1.4;padding:7px 10px;border-radius:8px;
+    width:max-content;max-width:220px;white-space:normal;box-shadow:0 6px 20px rgba(0,0,0,0.4);
     opacity:0;pointer-events:none;transition:opacity .12s, transform .12s;z-index:20;
   }
   .tip:hover::after{opacity:1;transform:translateX(-50%) translateY(0);}
 
   .overlay{position:fixed;inset:0;background:rgba(6,8,12,0.65);display:flex;align-items:center;justify-content:center;z-index:100;padding:20px;}
-  .modal{background:var(--bg-elev);border:1px solid var(--border);border-radius:16px;width:100%;max-width:460px;padding:22px;box-shadow:0 24px 70px rgba(0,0,0,0.55);max-height:86vh;overflow-y:auto;}
-  .modal h2{margin:0 0 4px;font-size:17px;display:flex;align-items:center;gap:8px;}
+  .modal{background:var(--bg-elev);border:1px solid var(--border);border-radius:16px;width:100%;max-width:440px;padding:22px;box-shadow:0 24px 70px rgba(0,0,0,0.55);max-height:86vh;overflow-y:auto;}
+  .modal h2{margin:0 0 4px;font-size:17px;}
   .modal .sub{margin:0 0 16px;font-size:12.5px;color:var(--text-dim);}
   .field{margin-bottom:13px;}
   .field label{display:block;font-size:12px;font-weight:700;color:var(--text-dim);margin-bottom:6px;}
@@ -275,17 +244,6 @@
   .modal-actions{display:flex;justify-content:space-between;align-items:center;margin-top:18px;}
   .modal-actions .right{display:flex;gap:8px;}
 
-  .cat-list{display:flex;flex-direction:column;gap:2px;margin-top:4px;}
-  .cat-row{
-    display:flex;align-items:center;gap:10px;padding:12px 8px;border-bottom:1px solid var(--border-soft);
-  }
-  .cat-row:last-child{border-bottom:none;}
-  .cat-row .dot{width:6px;height:6px;border-radius:50%;background:var(--company);flex:none;}
-  .cat-row .c-title{flex:1;font-size:15.5px;font-weight:600;color:var(--text);text-decoration:none;min-width:0;}
-  .cat-row .c-title:hover{color:var(--company);}
-  .cat-row .c-url{display:block;font-family:var(--mono);font-size:11px;color:var(--text-faint);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-  .cat-row-actions{display:flex;gap:2px;flex:none;}
-
   .toast{
     position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(10px);background:var(--bg-elev-2);
     border:1px solid var(--border);color:var(--text);padding:11px 18px;border-radius:10px;font-size:13.5px;
@@ -293,22 +251,11 @@
   }
   .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 
-  body:not(.admin-mode) .admin-only{display:none !important;}
-  .admin-badge{
-    display:none;align-items:center;gap:5px;font-family:var(--mono);font-size:11px;font-weight:700;
-    color:var(--internal);background:var(--internal-soft);padding:4px 10px;border-radius:20px;
-  }
-  body.admin-mode .admin-badge{display:inline-flex;}
-
   @media (max-width:760px){
     .app{padding:16px 14px 32px;}
     .topbar{flex-direction:column;align-items:stretch;}
     .topbar .controls{width:100%;}
     #search{flex:1;width:auto;}
-    .tabgroups{gap:18px;}
-    .tabgroup-divider{display:none;}
-    .tab-btn{min-width:100px;padding:11px 14px;}
-    .tile{width:calc(50% - 7px);}
   }
 </style>
 </head>
@@ -317,7 +264,7 @@
 
   <div class="topbar">
     <div class="brand">
-      <div class="brand-mark">B3</div>
+      <div class="brand-mark" id="brandMark">B3</div>
       <div>
         <h1>BU3 Site Directory <span class="total" id="totalCount"></span> <span class="admin-badge" id="adminBadge">관리자 모드</span></h1>
         <p>회사 · BU3 시스템 링크 모음</p>
@@ -332,32 +279,6 @@
         <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M12 5v14M5 12h14"/></svg>
         링크 추가
       </button>
-    </div>
-  </div>
-
-  <div class="tabgroups" id="tabgroups">
-    <div class="tabgroup co">
-      <div class="tabgroup-label">회사</div>
-      <div class="tabgroup-buttons">
-        <button class="tab-btn public" data-main="회사" data-access="사내+외부">
-          <span class="lbl">사내+외부</span><span class="n" data-count="회사|사내+외부">0개</span>
-        </button>
-        <button class="tab-btn internal" data-main="회사" data-access="사내전용">
-          <span class="lbl">사내전용</span><span class="n" data-count="회사|사내전용">0개</span>
-        </button>
-      </div>
-    </div>
-    <div class="tabgroup-divider"></div>
-    <div class="tabgroup bu">
-      <div class="tabgroup-label">BU3</div>
-      <div class="tabgroup-buttons">
-        <button class="tab-btn public" data-main="BU3" data-access="사내+외부">
-          <span class="lbl">사내+외부</span><span class="n" data-count="BU3|사내+외부">0개</span>
-        </button>
-        <button class="tab-btn internal" data-main="BU3" data-access="사내전용">
-          <span class="lbl">사내전용</span><span class="n" data-count="BU3|사내전용">0개</span>
-        </button>
-      </div>
     </div>
   </div>
 
@@ -378,29 +299,19 @@
     trash: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M8 6V4h8v2M6 6l1 14h10l1-14"/></svg>'
   };
 
+  var COLUMNS = [
+    {main:'회사', access:'사내+외부'},
+    {main:'회사', access:'사내전용'},
+    {main:'BU3', access:'사내+외부'},
+    {main:'BU3', access:'사내전용'}
+  ];
+
   var state = {
     links: [],
-    mainCategory: '회사',
-    accessType: '사내+외부',
     query: '',
-    isAdmin: false
+    isAdmin: false,
+    openGroups: new Set()
   };
-
-  function applyAdminClass(){
-    document.body.classList.toggle('admin-mode', state.isAdmin);
-  }
-
-  (function initAdmin(){
-    try{ state.isAdmin = localStorage.getItem('bu3_admin') === '1'; }catch(e){}
-    applyAdminClass();
-  })();
-
-  function toggleAdmin(){
-    state.isAdmin = !state.isAdmin;
-    try{ localStorage.setItem('bu3_admin', state.isAdmin ? '1' : '0'); }catch(e){}
-    applyAdminClass();
-    showToast(state.isAdmin ? '관리자 모드로 전환했습니다.' : '일반(보기) 모드로 전환했습니다.');
-  }
 
   function escapeHtml(s){
     return String(s == null ? '' : s)
@@ -414,6 +325,18 @@
     t.classList.add('show');
     clearTimeout(t._timer);
     t._timer = setTimeout(function(){ t.classList.remove('show'); }, 2400);
+  }
+
+  function applyAdminClass(){ document.body.classList.toggle('admin-mode', state.isAdmin); }
+  (function initAdmin(){
+    try{ state.isAdmin = localStorage.getItem('bu3_admin') === '1'; }catch(e){}
+    applyAdminClass();
+  })();
+  function toggleAdmin(){
+    state.isAdmin = !state.isAdmin;
+    try{ localStorage.setItem('bu3_admin', state.isAdmin ? '1' : '0'); }catch(e){}
+    applyAdminClass();
+    showToast(state.isAdmin ? '관리자 모드로 전환했습니다.' : '일반(보기) 모드로 전환했습니다.');
   }
 
   async function api(path, options){
@@ -447,49 +370,54 @@
     return out;
   }
 
-  function updateCounts(){
+  function updateTotal(){
     document.getElementById('totalCount').textContent = state.links.length ? ('총 ' + state.links.length + '개') : '';
-    document.querySelectorAll('.tab-btn').forEach(function(btn){
-      var main = btn.dataset.main, access = btn.dataset.access;
-      var n = state.links.filter(function(l){ return l.mainCategory === main && l.accessType === access; }).length;
-      var el = btn.querySelector('.n');
-      if(el) el.textContent = n + '개';
-      btn.classList.toggle('active', main === state.mainCategory && access === state.accessType);
-    });
   }
 
   function render(){
-    updateCounts();
+    updateTotal();
     var content = document.getElementById('content');
-
     var q = state.query.trim().toLowerCase();
-    if(q){
-      renderSearchResults(content, q);
-      return;
-    }
+    if(q){ renderSearchResults(content, q); return; }
 
     var grouped = groupBy(state.links);
-    var groupsMap = (grouped[state.mainCategory] && grouped[state.mainCategory][state.accessType]) || {};
-    var groupNames = Object.keys(groupsMap);
-
-    if(groupNames.length === 0){
-      content.innerHTML = '<div class="empty">이 카테고리에는 아직 링크가 없습니다. 우측 상단 "링크 추가"로 등록해보세요.</div>';
-      return;
-    }
-
-    var bu3Class = state.mainCategory === 'BU3' ? ' bu3-tile' : '';
-    var html = '<div class="tiles">';
-    groupNames.forEach(function(gname){
-      var items = groupsMap[gname];
-      if(items.length === 1 && !items[0].sub){
-        html += renderDirectTile(items[0], bu3Class);
-      }else{
-        html += renderCountTile(gname, items, bu3Class);
-      }
-    });
+    var html = '<div class="board">';
+    COLUMNS.forEach(function(col){ html += renderColumn(col, grouped); });
     html += '</div>';
     content.innerHTML = html;
     bindGridEvents();
+  }
+
+  function renderColumn(col, grouped){
+    var groupsMap = (grouped[col.main] && grouped[col.main][col.access]) || {};
+    var groupNames = Object.keys(groupsMap);
+    var total = 0;
+    groupNames.forEach(function(g){ total += groupsMap[g].length; });
+    var heroClass = col.access === '사내전용' ? 'internal' : 'public';
+    var labelClass = col.main === 'BU3' ? 'bu' : 'co';
+    var bu3Class = col.main === 'BU3' ? ' bu3-tile' : '';
+
+    var tilesHtml;
+    if(groupNames.length === 0){
+      tilesHtml = '<div class="empty">링크 없음</div>';
+    }else{
+      tilesHtml = groupNames.map(function(gname){
+        var items = groupsMap[gname];
+        var inner = items.length === 1 ? renderDirectTile(items[0], bu3Class) : renderCountTile(col.main, col.access, gname, items, bu3Class);
+        return '<div class="tile-cell">' + inner + '</div>';
+      }).join('');
+    }
+
+    return (
+      '<div class="col">' +
+        '<div class="col-label ' + labelClass + '">' + escapeHtml(col.main) + '</div>' +
+        '<div class="hero ' + heroClass + '">' +
+          '<div class="hname">' + escapeHtml(col.access) + '</div>' +
+          '<div class="hcount">' + total + '개</div>' +
+        '</div>' +
+        '<div class="tilegrid">' + tilesHtml + '</div>' +
+      '</div>'
+    );
   }
 
   function renderDirectTile(l, bu3Class){
@@ -506,12 +434,29 @@
     );
   }
 
-  function renderCountTile(gname, items, bu3Class){
+  function renderCountTile(main, access, gname, items, bu3Class){
+    var key = main + '|' + access + '|' + gname;
+    var isOpen = state.openGroups.has(key);
+    var rows = items.map(function(l){
+      var label = l.sub ? l.sub : gname;
+      var tip = l.desc ? '<span class="tip" data-tip="' + escapeHtml(l.desc) + '">' + ICONS.info + '</span>' : '';
+      return (
+        '<div class="exp-row">' +
+          '<a class="e-title" href="' + escapeHtml(l.url) + '" target="_blank" rel="noopener">' + escapeHtml(label) + '</a>' + tip +
+          '<div class="e-actions admin-only">' +
+            '<button class="icon-btn edit-exp-btn" data-id="' + l.id + '" title="수정">' + ICONS.edit + '</button>' +
+            '<button class="icon-btn danger del-exp-btn" data-id="' + l.id + '" title="삭제">' + ICONS.trash + '</button>' +
+          '</div>' +
+        '</div>'
+      );
+    }).join('');
+
     return (
-      '<div class="tile' + bu3Class + '" data-open-group="' + escapeHtml(gname) + '">' +
+      '<div class="tile' + bu3Class + (isOpen ? ' open' : '') + '" data-toggle-group="' + escapeHtml(key) + '">' +
         '<div class="num">' + items.length + '</div>' +
         '<div class="name">' + escapeHtml(gname) + '</div>' +
-      '</div>'
+      '</div>' +
+      (isOpen ? '<div class="tile-expand">' + rows + '</div>' : '')
     );
   }
 
@@ -522,23 +467,26 @@
         window.open(tile.dataset.openUrl, '_blank', 'noopener');
       });
     });
-    document.querySelectorAll('[data-open-group]').forEach(function(tile){
+    document.querySelectorAll('[data-toggle-group]').forEach(function(tile){
       tile.addEventListener('click', function(){
-        openCategoryModal(state.mainCategory, state.accessType, tile.dataset.openGroup);
+        var key = tile.dataset.toggleGroup;
+        if(state.openGroups.has(key)) state.openGroups.delete(key);
+        else state.openGroups.add(key);
+        render();
       });
     });
-    document.querySelectorAll('.edit-tile-btn').forEach(function(btn){
+    document.querySelectorAll('.edit-tile-btn, .edit-exp-btn').forEach(function(btn){
       btn.addEventListener('click', function(e){
         e.stopPropagation();
         var link = state.links.find(function(l){ return l.id === btn.dataset.id; });
         if(link) openModal(link);
       });
     });
-    document.querySelectorAll('.del-tile-btn').forEach(function(btn){
+    document.querySelectorAll('.del-tile-btn, .del-exp-btn').forEach(function(btn){
       btn.addEventListener('click', async function(e){
         e.stopPropagation();
-        await deleteLink(btn.dataset.id);
-        render();
+        var ok = await deleteLink(btn.dataset.id);
+        if(ok) render();
       });
     });
   }
@@ -591,64 +539,6 @@
     }
   }
 
-  function openCategoryModal(main, access, group){
-    var items = state.links.filter(function(l){
-      return l.mainCategory === main && l.accessType === access && l.group === group;
-    });
-    var root = document.getElementById('modalRoot');
-
-    if(items.length === 0){ closeModal(); render(); return; }
-
-    var rows = items.map(function(l){
-      var label = l.sub ? l.sub : group;
-      var tip = l.desc ? '<span class="tip" data-tip="' + escapeHtml(l.desc) + '">' + ICONS.info + '</span>' : '';
-      return (
-        '<div class="cat-row">' +
-          '<span class="dot"></span>' +
-          '<div style="flex:1;min-width:0;">' +
-            '<a class="c-title" href="' + escapeHtml(l.url) + '" target="_blank" rel="noopener">' + escapeHtml(label) + '</a> ' + tip +
-            '<span class="c-url">' + escapeHtml(l.url) + '</span>' +
-          '</div>' +
-          '<div class="cat-row-actions admin-only">' +
-            '<button class="icon-btn cat-edit-btn" data-id="' + l.id + '" title="수정">' + ICONS.edit + '</button>' +
-            '<button class="icon-btn danger cat-del-btn" data-id="' + l.id + '" title="삭제">' + ICONS.trash + '</button>' +
-          '</div>' +
-        '</div>'
-      );
-    }).join('');
-
-    root.innerHTML =
-      '<div class="overlay" id="overlay">' +
-        '<div class="modal">' +
-          '<h2>' + escapeHtml(group) + '</h2>' +
-          '<p class="sub">' + escapeHtml(main) + ' · ' + escapeHtml(access) + ' — ' + items.length + '개 링크</p>' +
-          '<div class="cat-list">' + rows + '</div>' +
-        '</div>' +
-      '</div>';
-
-    document.getElementById('overlay').addEventListener('click', function(e){
-      if(e.target.id === 'overlay') closeModal();
-    });
-    root.querySelectorAll('.cat-edit-btn').forEach(function(btn){
-      btn.addEventListener('click', function(){
-        var link = state.links.find(function(l){ return l.id === btn.dataset.id; });
-        if(link) openModal(link, {main:main, access:access, group:group});
-      });
-    });
-    root.querySelectorAll('.cat-del-btn').forEach(function(btn){
-      btn.addEventListener('click', async function(){
-        var ok = await deleteLink(btn.dataset.id);
-        if(ok){
-          var remaining = state.links.filter(function(l){
-            return l.mainCategory === main && l.accessType === access && l.group === group;
-          });
-          if(remaining.length > 0){ openCategoryModal(main, access, group); }
-          else { closeModal(); render(); }
-        }
-      });
-    });
-  }
-
   function existingGroups(mainCategory, accessType){
     var set = {};
     state.links.forEach(function(l){
@@ -657,9 +547,9 @@
     return Object.keys(set);
   }
 
-  function openModal(existing, returnCtx){
+  function openModal(existing){
     var isEdit = !!existing;
-    var data = existing || {mainCategory: state.mainCategory, accessType: state.accessType, group:'', sub:'', url:'', desc:''};
+    var data = existing || {mainCategory:'회사', accessType:'사내+외부', group:'', sub:'', url:'', desc:''};
     var root = document.getElementById('modalRoot');
 
     var groupOptions = existingGroups(data.mainCategory, data.accessType)
@@ -729,15 +619,9 @@
     }
 
     document.getElementById('overlay').addEventListener('click', function(e){
-      if(e.target.id === 'overlay'){
-        if(returnCtx) openCategoryModal(returnCtx.main, returnCtx.access, returnCtx.group);
-        else closeModal();
-      }
+      if(e.target.id === 'overlay') closeModal();
     });
-    document.getElementById('cancelModal').addEventListener('click', function(){
-      if(returnCtx) openCategoryModal(returnCtx.main, returnCtx.access, returnCtx.group);
-      else closeModal();
-    });
+    document.getElementById('cancelModal').addEventListener('click', closeModal);
 
     document.getElementById('saveModal').addEventListener('click', async function(){
       var main = document.getElementById('f-main').value;
@@ -765,9 +649,7 @@
           state.links.push(created.link);
         }
         showToast(isEdit ? '수정했습니다.' : '추가했습니다.');
-        state.mainCategory = main; state.accessType = access;
-        if(returnCtx){ openCategoryModal(main, access, group); }
-        else { closeModal(); render(); }
+        closeModal();
         render();
       }catch(err){
         saveBtn.disabled = false;
@@ -778,16 +660,7 @@
     if(isEdit){
       document.getElementById('deleteInModal').addEventListener('click', async function(){
         var ok = await deleteLink(existing.id);
-        if(ok){
-          if(returnCtx){
-            var remaining = state.links.filter(function(l){
-              return l.mainCategory === returnCtx.main && l.accessType === returnCtx.access && l.group === returnCtx.group;
-            });
-            if(remaining.length > 0){ openCategoryModal(returnCtx.main, returnCtx.access, returnCtx.group); return; }
-          }
-          closeModal();
-          render();
-        }
+        if(ok){ closeModal(); render(); }
       });
     }
 
@@ -798,23 +671,15 @@
     document.getElementById('modalRoot').innerHTML = '';
   }
 
-  document.querySelector('.brand-mark').addEventListener('click', function(e){
+  document.getElementById('brandMark').addEventListener('click', function(e){
     if(e.ctrlKey || e.metaKey){
       e.preventDefault();
       toggleAdmin();
     }
   });
-
   document.getElementById('addBtn').addEventListener('click', function(){ openModal(null); });
   document.getElementById('search').addEventListener('input', function(e){
     state.query = e.target.value;
-    render();
-  });
-  document.getElementById('tabgroups').addEventListener('click', function(e){
-    var btn = e.target.closest('.tab-btn');
-    if(!btn) return;
-    state.mainCategory = btn.dataset.main;
-    state.accessType = btn.dataset.access;
     render();
   });
   document.addEventListener('keydown', function(e){
