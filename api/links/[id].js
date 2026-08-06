@@ -1,7 +1,12 @@
-const { kv } = require('@vercel/kv');
+const { Redis } = require('@upstash/redis');
 const { seedLinks } = require('../_seed');
 
 const KEY = 'bu3-portal-links';
+
+const kv = new Redis({
+  url: process.env.KV_REST_API_URL,
+  token: process.env.KV_REST_API_TOKEN
+});
 
 module.exports = async function handler(req, res) {
   const { id } = req.query;
