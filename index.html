@@ -293,6 +293,13 @@
   }
   .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 
+  body:not(.admin-mode) .admin-only{display:none !important;}
+  .admin-badge{
+    display:none;align-items:center;gap:5px;font-family:var(--mono);font-size:11px;font-weight:700;
+    color:var(--internal);background:var(--internal-soft);padding:4px 10px;border-radius:20px;
+  }
+  body.admin-mode .admin-badge{display:inline-flex;}
+
   @media (max-width:760px){
     .app{padding:16px 14px 32px;}
     .topbar{flex-direction:column;align-items:stretch;}
@@ -312,7 +319,7 @@
     <div class="brand">
       <div class="brand-mark">B3</div>
       <div>
-        <h1>BU3 Site Directory <span class="total" id="totalCount"></span></h1>
+        <h1>BU3 Site Directory <span class="total" id="totalCount"></span> <span class="admin-badge" id="adminBadge">관리자 모드</span></h1>
         <p>회사 · BU3 시스템 링크 모음</p>
       </div>
     </div>
@@ -321,7 +328,7 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
         <input id="search" placeholder="사이트, 설명 검색…" />
       </div>
-      <button class="btn btn-primary" id="addBtn">
+      <button class="btn btn-primary admin-only" id="addBtn">
         <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M12 5v14M5 12h14"/></svg>
         링크 추가
       </button>
@@ -375,8 +382,25 @@
     links: [],
     mainCategory: '회사',
     accessType: '사내+외부',
-    query: ''
+    query: '',
+    isAdmin: false
   };
+
+  function applyAdminClass(){
+    document.body.classList.toggle('admin-mode', state.isAdmin);
+  }
+
+  (function initAdmin(){
+    try{ state.isAdmin = localStorage.getItem('bu3_admin') === '1'; }catch(e){}
+    applyAdminClass();
+  })();
+
+  function toggleAdmin(){
+    state.isAdmin = !state.isAdmin;
+    try{ localStorage.setItem('bu3_admin', state.isAdmin ? '1' : '0'); }catch(e){}
+    applyAdminClass();
+    showToast(state.isAdmin ? '관리자 모드로 전환했습니다.' : '일반(보기) 모드로 전환했습니다.');
+  }
 
   function escapeHtml(s){
     return String(s == null ? '' : s)
@@ -475,8 +499,8 @@
         '<div class="name">' + escapeHtml(l.group) + '</div>' +
         '<div class="tile-actions">' +
           (l.desc ? '<span class="tip" data-tip="' + escapeHtml(l.desc) + '">' + ICONS.info + '</span>' : '') +
-          '<button class="icon-btn edit-tile-btn" data-id="' + l.id + '" title="수정">' + ICONS.edit + '</button>' +
-          '<button class="icon-btn danger del-tile-btn" data-id="' + l.id + '" title="삭제">' + ICONS.trash + '</button>' +
+          '<button class="icon-btn admin-only edit-tile-btn" data-id="' + l.id + '" title="수정">' + ICONS.edit + '</button>' +
+          '<button class="icon-btn admin-only danger del-tile-btn" data-id="' + l.id + '" title="삭제">' + ICONS.trash + '</button>' +
         '</div>' +
       '</div>'
     );
@@ -540,7 +564,7 @@
             '<a class="r-title" href="' + escapeHtml(l.url) + '" target="_blank" rel="noopener">' + escapeHtml(label) + '</a> ' + tip +
             '<div class="r-crumb">' + escapeHtml(crumb) + '</div>' +
           '</div>' +
-          '<div class="r-actions">' +
+          '<div class="r-actions admin-only">' +
             '<button class="icon-btn edit-tile-btn" data-id="' + l.id + '" title="수정">' + ICONS.edit + '</button>' +
             '<button class="icon-btn danger del-tile-btn" data-id="' + l.id + '" title="삭제">' + ICONS.trash + '</button>' +
           '</div>' +
@@ -585,7 +609,7 @@
             '<a class="c-title" href="' + escapeHtml(l.url) + '" target="_blank" rel="noopener">' + escapeHtml(label) + '</a> ' + tip +
             '<span class="c-url">' + escapeHtml(l.url) + '</span>' +
           '</div>' +
-          '<div class="cat-row-actions">' +
+          '<div class="cat-row-actions admin-only">' +
             '<button class="icon-btn cat-edit-btn" data-id="' + l.id + '" title="수정">' + ICONS.edit + '</button>' +
             '<button class="icon-btn danger cat-del-btn" data-id="' + l.id + '" title="삭제">' + ICONS.trash + '</button>' +
           '</div>' +
@@ -773,6 +797,13 @@
   function closeModal(){
     document.getElementById('modalRoot').innerHTML = '';
   }
+
+  document.querySelector('.brand-mark').addEventListener('click', function(e){
+    if(e.ctrlKey || e.metaKey){
+      e.preventDefault();
+      toggleAdmin();
+    }
+  });
 
   document.getElementById('addBtn').addEventListener('click', function(){ openModal(null); });
   document.getElementById('search').addEventListener('input', function(e){
