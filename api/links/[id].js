@@ -1,7 +1,8 @@
 const { Redis } = require('@upstash/redis');
-const { seedLinks } = require('../_seed');
+const { seedLinks, seedColumns } = require('../_seed');
 
 const KEY = 'bu3-portal-links';
+const COL_KEY = 'bu3-portal-columns';
 
 const kv = new Redis({
   url: process.env.KV_REST_API_URL,
@@ -30,6 +31,13 @@ module.exports = async function handler(req, res) {
       }
       if (!/^https?:\/\//i.test(url)) {
         res.status(400).json({ error: 'URL은 http:// 또는 https:// 로 시작해야 합니다.' });
+        return;
+      }
+
+      const columns = (await kv.get(COL_KEY)) || seedColumns();
+      const validColumn = columns.find((c) => c.mainCategory === mainCategory && c.accessType === accessType);
+      if (!validColumn) {
+        res.status(400).json({ error: '존재하지 않는 카테고리(그룹)입니다. 먼저 카테고리 관리에서 그룹을 추가해주세요.' });
         return;
       }
 

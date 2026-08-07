@@ -124,22 +124,19 @@
   .btn-danger{background:rgba(255,107,129,0.12);color:var(--danger);}
   .btn-danger:hover{background:rgba(255,107,129,0.22);}
 
-  /* ---------- Board: 4 columns in one row ---------- */
+  /* ---------- Board: column count adapts automatically to the number of groups ---------- */
   .board{
     display:grid;
-    grid-template-columns:repeat(4, minmax(0,1fr));
+    grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));
     gap:18px;
     align-items:start;
   }
-  @media (max-width:1150px){ .board{grid-template-columns:repeat(2,1fr);} }
-  @media (max-width:620px){ .board{grid-template-columns:1fr;} }
+  .col{ --accent:var(--company); }
 
   .col-label{
     font-family:var(--mono);font-size:11.5px;font-weight:700;text-transform:uppercase;
-    letter-spacing:0.07em;color:var(--text-faint);text-align:center;margin-bottom:7px;
+    letter-spacing:0.07em;color:var(--accent);text-align:center;margin-bottom:7px;
   }
-  .col-label.co{color:var(--company);}
-  .col-label.bu{color:var(--bu3);}
 
   .hero{border-radius:12px;padding:12px 10px;margin-bottom:12px;text-align:center;}
   .hero.public{background:var(--public-soft);border:1.5px solid var(--public);color:var(--public);}
@@ -155,12 +152,9 @@
     border:1.5px solid var(--border-soft);display:flex;flex-direction:column;align-items:center;justify-content:center;
     gap:5px;cursor:pointer;position:relative;padding:11px 6px;transition:border-color .15s, transform .1s;
   }
-  .tile:hover{border-color:var(--company);transform:translateY(-1px);}
-  .tile.bu3-tile:hover{border-color:var(--bu3);}
-  .tile.open{border-color:var(--company);}
-  .tile.bu3-tile.open{border-color:var(--bu3);}
-  .tile .num{font-family:var(--mono);font-size:26px;font-weight:800;color:var(--company);line-height:1;}
-  .tile.bu3-tile .num{color:var(--bu3);}
+  .tile:hover{border-color:var(--accent);transform:translateY(-1px);}
+  .tile.open{border-color:var(--accent);}
+  .tile .num{font-family:var(--mono);font-size:26px;font-weight:800;color:var(--accent);line-height:1;}
   .tile .num-row{display:flex;align-items:center;gap:5px;}
   .tile .num-icon{display:flex;width:16px;height:16px;}
   .tile .num-icon svg{width:16px;height:16px;}
@@ -252,6 +246,39 @@
   .modal-actions{display:flex;justify-content:space-between;align-items:center;margin-top:18px;}
   .modal-actions .right{display:flex;gap:8px;}
 
+  .cat-list{display:flex;flex-direction:column;gap:8px;margin-bottom:16px;}
+  .cat-row{
+    display:flex;align-items:center;gap:10px;background:var(--bg-elev-2);border:1px solid var(--border-soft);
+    border-radius:10px;padding:9px 11px;
+  }
+  .cat-row .swatch{width:14px;height:14px;border-radius:50%;flex:none;}
+  .cat-row .cat-main{font-size:13.5px;font-weight:700;color:var(--text);}
+  .cat-row .cat-sep{color:var(--text-faint);font-size:12px;}
+  .cat-row .cat-access{font-size:13px;color:var(--text-dim);flex:1;min-width:0;}
+  .cat-row .cat-style{
+    font-family:var(--mono);font-size:10.5px;font-weight:700;padding:2px 7px;border-radius:20px;flex:none;
+  }
+  .cat-row .cat-style.public{background:var(--public-soft);color:var(--public);}
+  .cat-row .cat-style.internal{background:var(--internal-soft);color:var(--internal);}
+  .cat-row .cat-actions{display:flex;gap:1px;flex:none;}
+  .cat-empty{text-align:center;color:var(--text-faint);font-size:13px;padding:14px 0;}
+  .swatch-picker{display:flex;gap:8px;flex-wrap:wrap;}
+  .swatch-opt{
+    width:26px;height:26px;border-radius:50%;cursor:pointer;border:2px solid transparent;flex:none;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .swatch-opt.selected{border-color:var(--text);}
+  .swatch-opt svg{width:13px;height:13px;color:#0a0c10;display:none;}
+  .swatch-opt.selected svg{display:block;}
+  .style-toggle{display:flex;gap:8px;}
+  .style-btn{
+    flex:1;background:var(--bg);border:1px solid var(--border);color:var(--text-dim);border-radius:9px;
+    padding:9px 8px;font-size:12.5px;font-weight:700;cursor:pointer;text-align:center;
+  }
+  .style-btn.selected.public{border-color:var(--public);color:var(--public);background:var(--public-soft);}
+  .style-btn.selected.internal{border-color:var(--internal);color:var(--internal);background:var(--internal-soft);}
+  .cat-form-title{font-size:12.5px;font-weight:700;color:var(--text-dim);margin:16px 0 10px;border-top:1px solid var(--border-soft);padding-top:14px;}
+
   .toast{
     position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(10px);background:var(--bg-elev-2);
     border:1px solid var(--border);color:var(--text);padding:11px 18px;border-radius:10px;font-size:13.5px;
@@ -283,6 +310,10 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
         <input id="search" placeholder="사이트, 설명 검색…" />
       </div>
+      <button class="btn btn-ghost admin-only" id="manageCatBtn">
+        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+        카테고리 관리
+      </button>
       <button class="btn btn-primary admin-only" id="addBtn">
         <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M12 5v14M5 12h14"/></svg>
         링크 추가
@@ -338,15 +369,11 @@
   };
   function getMeta(gname){ return ICON_META[gname] || {icon:'link', color:'#98a1b3'}; }
 
-  var COLUMNS = [
-    {main:'회사', access:'사내+외부'},
-    {main:'회사', access:'사내전용'},
-    {main:'BU3', access:'사내+외부'},
-    {main:'BU3', access:'사내전용'}
-  ];
+  var PALETTE = ['#5fa8ff', '#ff8a68', '#33e0c7', '#c77dff', '#ffd166', '#4ade80', '#ff6b81', '#98a1b3'];
 
   var state = {
     links: [],
+    columns: [],
     query: '',
     isAdmin: false,
     openGroups: new Set()
@@ -388,8 +415,9 @@
 
   async function load(){
     try{
-      var data = await api('/api/links');
-      state.links = data.links || [];
+      var results = await Promise.all([ api('/api/links'), api('/api/columns') ]);
+      state.links = results[0].links || [];
+      state.columns = results[1].columns || [];
     }catch(e){
       console.error(e);
       document.getElementById('content').innerHTML = '<div class="empty">데이터를 불러오지 못했습니다. 새로고침해주세요.<br><span style="font-family:var(--mono);font-size:11px;">' + escapeHtml(e.message) + '</span></div>';
@@ -419,22 +447,25 @@
     var q = state.query.trim().toLowerCase();
     if(q){ renderSearchResults(content, q); return; }
 
+    if(state.columns.length === 0){
+      content.innerHTML = '<div class="empty">등록된 카테고리(그룹)가 없습니다.<br>관리자 모드에서 "카테고리 관리"로 그룹을 먼저 추가해주세요.</div>';
+      return;
+    }
+
     var grouped = groupBy(state.links);
     var html = '<div class="board">';
-    COLUMNS.forEach(function(col){ html += renderColumn(col, grouped); });
+    state.columns.forEach(function(col){ html += renderColumn(col, grouped); });
     html += '</div>';
     content.innerHTML = html;
     bindGridEvents();
   }
 
   function renderColumn(col, grouped){
-    var groupsMap = (grouped[col.main] && grouped[col.main][col.access]) || {};
+    var groupsMap = (grouped[col.mainCategory] && grouped[col.mainCategory][col.accessType]) || {};
     var groupNames = Object.keys(groupsMap);
     var total = 0;
     groupNames.forEach(function(g){ total += groupsMap[g].length; });
-    var heroClass = col.access === '사내전용' ? 'internal' : 'public';
-    var labelClass = col.main === 'BU3' ? 'bu' : 'co';
-    var bu3Class = col.main === 'BU3' ? ' bu3-tile' : '';
+    var heroClass = col.accessStyle === 'internal' ? 'internal' : 'public';
 
     var tilesHtml;
     if(groupNames.length === 0){
@@ -442,16 +473,16 @@
     }else{
       tilesHtml = groupNames.map(function(gname){
         var items = groupsMap[gname];
-        var inner = items.length === 1 ? renderDirectTile(items[0], bu3Class) : renderCountTile(col.main, col.access, gname, items, bu3Class);
+        var inner = items.length === 1 ? renderDirectTile(items[0]) : renderCountTile(col.mainCategory, col.accessType, gname, items);
         return '<div class="tile-cell">' + inner + '</div>';
       }).join('');
     }
 
     return (
-      '<div class="col">' +
-        '<div class="col-label ' + labelClass + '">' + escapeHtml(col.main) + '</div>' +
+      '<div class="col" style="--accent:' + escapeHtml(col.mainColor || '#5fa8ff') + ';">' +
+        '<div class="col-label">' + escapeHtml(col.mainCategory) + '</div>' +
         '<div class="hero ' + heroClass + '">' +
-          '<div class="hname">' + escapeHtml(col.access) + '</div>' +
+          '<div class="hname">' + escapeHtml(col.accessType) + '</div>' +
           '<div class="hcount">' + total + '개</div>' +
         '</div>' +
         '<div class="tilegrid">' + tilesHtml + '</div>' +
@@ -459,11 +490,11 @@
     );
   }
 
-  function renderDirectTile(l, bu3Class){
+  function renderDirectTile(l){
     var meta = getMeta(l.group);
     var iconStyle = 'background:' + meta.color + '1f;color:' + meta.color + ';';
     return (
-      '<div class="tile direct' + bu3Class + '" data-open-url="' + escapeHtml(l.url) + '">' +
+      '<div class="tile direct" data-open-url="' + escapeHtml(l.url) + '">' +
         '<div class="icon" style="' + iconStyle + '">' + ICONS[meta.icon] + '</div>' +
         '<div class="name">' + escapeHtml(l.group) + '</div>' +
         '<div class="tile-actions">' +
@@ -475,7 +506,7 @@
     );
   }
 
-  function renderCountTile(main, access, gname, items, bu3Class){
+  function renderCountTile(main, access, gname, items){
     var key = main + '|' + access + '|' + gname;
     var isOpen = state.openGroups.has(key);
     var meta = getMeta(gname);
@@ -494,7 +525,7 @@
     }).join('');
 
     return (
-      '<div class="tile' + bu3Class + (isOpen ? ' open' : '') + '" data-toggle-group="' + escapeHtml(key) + '">' +
+      '<div class="tile' + (isOpen ? ' open' : '') + '" data-toggle-group="' + escapeHtml(key) + '">' +
         '<div class="num-row">' +
           '<span class="num-icon" style="color:' + meta.color + ';">' + ICONS[meta.icon] + '</span>' +
           '<span class="num" style="color:' + meta.color + ';">' + items.length + '</span>' +
@@ -592,12 +623,29 @@
     return Object.keys(set);
   }
 
+  function findColumnFor(mainCategory, accessType){
+    return state.columns.find(function(c){ return c.mainCategory === mainCategory && c.accessType === accessType; });
+  }
+
   function openModal(existing){
+    if(state.columns.length === 0){
+      showToast('먼저 "카테고리 관리"에서 그룹을 추가해주세요.');
+      return;
+    }
     var isEdit = !!existing;
-    var data = existing || {mainCategory:'회사', accessType:'사내+외부', group:'', sub:'', url:'', desc:''};
+    var data = existing || {mainCategory:'', accessType:'', group:'', sub:'', url:'', desc:''};
     var root = document.getElementById('modalRoot');
 
-    var groupOptions = existingGroups(data.mainCategory, data.accessType)
+    var currentCol = isEdit ? findColumnFor(data.mainCategory, data.accessType) : null;
+    var initialColId = currentCol ? currentCol.id : state.columns[0].id;
+
+    var columnOptions = state.columns.map(function(c){
+      var label = c.mainCategory + ' · ' + c.accessType;
+      return '<option value="' + c.id + '"' + (c.id === initialColId ? ' selected' : '') + '>' + escapeHtml(label) + '</option>';
+    }).join('');
+
+    var initialCol = state.columns.find(function(c){ return c.id === initialColId; }) || state.columns[0];
+    var groupOptions = existingGroups(initialCol.mainCategory, initialCol.accessType)
       .map(function(g){ return '<option value="' + escapeHtml(g) + '">'; }).join('');
 
     root.innerHTML =
@@ -606,21 +654,9 @@
           '<h2>' + (isEdit ? '링크 수정' : '새 링크 추가') + '<button class="modal-close" id="closeModalX" title="닫기">&times;</button></h2>' +
           '<p class="sub">' + (isEdit ? '이 항목만 수정됩니다.' : '카테고리를 지정하고 링크를 등록하세요.') + '</p>' +
 
-          '<div class="field-row">' +
-            '<div class="field">' +
-              '<label>대분류 <span class="req">*</span></label>' +
-              '<select id="f-main">' +
-                '<option value="회사"' + (data.mainCategory==='회사'?' selected':'') + '>회사</option>' +
-                '<option value="BU3"' + (data.mainCategory==='BU3'?' selected':'') + '>BU3</option>' +
-              '</select>' +
-            '</div>' +
-            '<div class="field">' +
-              '<label>접근범위 <span class="req">*</span></label>' +
-              '<select id="f-access">' +
-                '<option value="사내+외부"' + (data.accessType==='사내+외부'?' selected':'') + '>사내+외부</option>' +
-                '<option value="사내전용"' + (data.accessType==='사내전용'?' selected':'') + '>사내전용</option>' +
-              '</select>' +
-            '</div>' +
+          '<div class="field">' +
+            '<label>카테고리(그룹) <span class="req">*</span></label>' +
+            '<select id="f-column">' + columnOptions + '</select>' +
           '</div>' +
 
           '<div class="field">' +
@@ -654,12 +690,12 @@
         '</div>' +
       '</div>';
 
-    document.getElementById('f-main').addEventListener('change', refreshGroupSuggest);
-    document.getElementById('f-access').addEventListener('change', refreshGroupSuggest);
+    document.getElementById('f-column').addEventListener('change', refreshGroupSuggest);
     function refreshGroupSuggest(){
-      var m = document.getElementById('f-main').value;
-      var a = document.getElementById('f-access').value;
-      document.getElementById('group-suggest').innerHTML = existingGroups(m,a)
+      var colId = document.getElementById('f-column').value;
+      var col = state.columns.find(function(c){ return c.id === colId; });
+      if(!col) return;
+      document.getElementById('group-suggest').innerHTML = existingGroups(col.mainCategory, col.accessType)
         .map(function(g){ return '<option value="' + escapeHtml(g) + '">'; }).join('');
     }
 
@@ -667,18 +703,19 @@
     document.getElementById('cancelModal').addEventListener('click', closeModal);
 
     document.getElementById('saveModal').addEventListener('click', async function(){
-      var main = document.getElementById('f-main').value;
-      var access = document.getElementById('f-access').value;
+      var colId = document.getElementById('f-column').value;
+      var col = state.columns.find(function(c){ return c.id === colId; });
       var group = document.getElementById('f-group').value.trim();
       var sub = document.getElementById('f-sub').value.trim();
       var url = document.getElementById('f-url').value.trim();
       var desc = document.getElementById('f-desc').value.trim();
 
+      if(!col){ showToast('카테고리를 선택해주세요.'); return; }
       if(!group){ showToast('중분류(그룹명)를 입력해주세요.'); return; }
       if(!url){ showToast('URL을 입력해주세요.'); return; }
       if(!/^https?:\/\//i.test(url)){ showToast('URL은 http:// 또는 https:// 로 시작해야 합니다.'); return; }
 
-      var payload = { mainCategory: main, accessType: access, group: group, sub: sub, url: url, desc: desc };
+      var payload = { mainCategory: col.mainCategory, accessType: col.accessType, group: group, sub: sub, url: url, desc: desc };
       var saveBtn = document.getElementById('saveModal');
       saveBtn.disabled = true;
 
@@ -714,6 +751,164 @@
     document.getElementById('modalRoot').innerHTML = '';
   }
 
+  // ---------- Category (column) management ----------
+  function openCategoryModal(editing){
+    var isEdit = !!editing;
+    var data = editing || {mainCategory:'', mainColor: PALETTE[state.columns.length % PALETTE.length], accessType:'', accessStyle:'public'};
+    var root = document.getElementById('modalRoot');
+
+    var listRows = state.columns.map(function(c){
+      return (
+        '<div class="cat-row">' +
+          '<span class="swatch" style="background:' + escapeHtml(c.mainColor) + ';"></span>' +
+          '<span class="cat-main">' + escapeHtml(c.mainCategory) + '</span>' +
+          '<span class="cat-sep">·</span>' +
+          '<span class="cat-access">' + escapeHtml(c.accessType) + '</span>' +
+          '<span class="cat-style ' + (c.accessStyle === 'internal' ? 'internal' : 'public') + '">' + (c.accessStyle === 'internal' ? '제한형' : '공개형') + '</span>' +
+          '<div class="cat-actions">' +
+            '<button class="icon-btn cat-edit-btn" data-id="' + c.id + '" title="수정">' + ICONS.edit + '</button>' +
+            '<button class="icon-btn danger cat-del-btn" data-id="' + c.id + '" title="삭제">' + ICONS.trash + '</button>' +
+          '</div>' +
+        '</div>'
+      );
+    }).join('') || '<div class="cat-empty">등록된 그룹이 없습니다.</div>';
+
+    var swatches = PALETTE.map(function(color){
+      var sel = color === data.mainColor;
+      return (
+        '<div class="swatch-opt' + (sel ? ' selected' : '') + '" data-color="' + color + '" style="background:' + color + ';">' +
+          ICONS.checkcircle +
+        '</div>'
+      );
+    }).join('');
+
+    root.innerHTML =
+      '<div class="overlay" id="overlay">' +
+        '<div class="modal">' +
+          '<h2>카테고리 관리<button class="modal-close" id="closeCatX" title="닫기">&times;</button></h2>' +
+          '<p class="sub">대분류 × 접근범위 조합으로 화면에 보이는 그룹(박스 열)을 관리합니다. 그룹을 삭제하면 소속된 링크도 함께 삭제됩니다.</p>' +
+
+          '<div class="cat-list">' + listRows + '</div>' +
+
+          '<div class="cat-form-title">' + (isEdit ? '그룹 수정' : '새 그룹 추가') + '</div>' +
+
+          '<div class="field">' +
+            '<label>대분류명 <span class="req">*</span></label>' +
+            '<input id="cf-main" list="main-suggest" value="' + escapeHtml(data.mainCategory) + '" placeholder="예: BU1, BU2, 회사…" />' +
+            '<datalist id="main-suggest">' + mainCategorySuggestOptions() + '</datalist>' +
+          '</div>' +
+
+          '<div class="field">' +
+            '<label>대분류 색상</label>' +
+            '<div class="swatch-picker" id="cf-color-picker">' + swatches + '</div>' +
+          '</div>' +
+
+          '<div class="field">' +
+            '<label>접근범위명 <span class="req">*</span></label>' +
+            '<input id="cf-access" list="access-suggest" value="' + escapeHtml(data.accessType) + '" placeholder="예: 사내+외부, 사내전용…" />' +
+            '<datalist id="access-suggest">' + accessTypeSuggestOptions() + '</datalist>' +
+          '</div>' +
+
+          '<div class="field">' +
+            '<label>표시 스타일</label>' +
+            '<div class="style-toggle">' +
+              '<div class="style-btn public' + (data.accessStyle !== 'internal' ? ' selected' : '') + '" data-style="public">공개형 (사내+외부 느낌)</div>' +
+              '<div class="style-btn internal' + (data.accessStyle === 'internal' ? ' selected' : '') + '" data-style="internal">제한형 (사내전용 느낌)</div>' +
+            '</div>' +
+          '</div>' +
+
+          '<div class="modal-actions">' +
+            '<span></span>' +
+            '<div class="right">' +
+              '<button class="btn btn-ghost" id="closeCatBtn">닫기</button>' +
+              '<button class="btn btn-primary" id="saveCatBtn">' + (isEdit ? '수정 저장' : '그룹 추가') + '</button>' +
+            '</div>' +
+          '</div>' +
+        '</div>' +
+      '</div>';
+
+    var selectedColor = data.mainColor;
+    var selectedStyle = data.accessStyle === 'internal' ? 'internal' : 'public';
+
+    root.querySelectorAll('.swatch-opt').forEach(function(el){
+      el.addEventListener('click', function(){
+        root.querySelectorAll('.swatch-opt').forEach(function(s){ s.classList.remove('selected'); });
+        el.classList.add('selected');
+        selectedColor = el.dataset.color;
+      });
+    });
+    root.querySelectorAll('.style-btn').forEach(function(el){
+      el.addEventListener('click', function(){
+        root.querySelectorAll('.style-btn').forEach(function(s){ s.classList.remove('selected'); });
+        el.classList.add('selected');
+        selectedStyle = el.dataset.style;
+      });
+    });
+
+    document.getElementById('closeCatX').addEventListener('click', closeModal);
+    document.getElementById('closeCatBtn').addEventListener('click', closeModal);
+
+    root.querySelectorAll('.cat-edit-btn').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        var col = state.columns.find(function(c){ return c.id === btn.dataset.id; });
+        if(col) openCategoryModal(col);
+      });
+    });
+    root.querySelectorAll('.cat-del-btn').forEach(function(btn){
+      btn.addEventListener('click', async function(){
+        var col = state.columns.find(function(c){ return c.id === btn.dataset.id; });
+        if(!col) return;
+        var affected = state.links.filter(function(l){ return l.mainCategory === col.mainCategory && l.accessType === col.accessType; }).length;
+        var msg = '"' + col.mainCategory + ' · ' + col.accessType + '" 그룹을 삭제할까요?' +
+          (affected > 0 ? ('\n이 그룹에 속한 링크 ' + affected + '개도 함께 삭제됩니다.') : '');
+        if(!confirm(msg)) return;
+        try{
+          await api('/api/columns/' + encodeURIComponent(col.id), { method:'DELETE' });
+          showToast('그룹을 삭제했습니다.');
+          await load();
+          openCategoryModal(null);
+        }catch(err){
+          showToast(err.message || '삭제에 실패했습니다.');
+        }
+      });
+    });
+
+    document.getElementById('saveCatBtn').addEventListener('click', async function(){
+      var mainCategory = document.getElementById('cf-main').value.trim();
+      var accessType = document.getElementById('cf-access').value.trim();
+      if(!mainCategory || !accessType){ showToast('대분류명과 접근범위명을 입력해주세요.'); return; }
+
+      var payload = { mainCategory: mainCategory, mainColor: selectedColor, accessType: accessType, accessStyle: selectedStyle };
+      var btn = document.getElementById('saveCatBtn');
+      btn.disabled = true;
+      try{
+        if(isEdit){
+          await api('/api/columns/' + encodeURIComponent(editing.id), { method:'PUT', body:JSON.stringify(payload) });
+          showToast('그룹을 수정했습니다.');
+        }else{
+          await api('/api/columns', { method:'POST', body:JSON.stringify(payload) });
+          showToast('그룹을 추가했습니다.');
+        }
+        await load();
+        openCategoryModal(null);
+      }catch(err){
+        btn.disabled = false;
+        showToast(err.message || '저장에 실패했습니다.');
+      }
+    });
+  }
+
+  function mainCategorySuggestOptions(){
+    var set = {};
+    state.columns.forEach(function(c){ set[c.mainCategory] = true; });
+    return Object.keys(set).map(function(m){ return '<option value="' + escapeHtml(m) + '">'; }).join('');
+  }
+  function accessTypeSuggestOptions(){
+    var set = {};
+    state.columns.forEach(function(c){ set[c.accessType] = true; });
+    return Object.keys(set).map(function(a){ return '<option value="' + escapeHtml(a) + '">'; }).join('');
+  }
+
   document.getElementById('brandMark').addEventListener('click', function(e){
     if(e.ctrlKey || e.metaKey){
       e.preventDefault();
@@ -721,6 +916,7 @@
     }
   });
   document.getElementById('addBtn').addEventListener('click', function(){ openModal(null); });
+  document.getElementById('manageCatBtn').addEventListener('click', function(){ openCategoryModal(null); });
   document.getElementById('search').addEventListener('input', function(e){
     state.query = e.target.value;
     render();
