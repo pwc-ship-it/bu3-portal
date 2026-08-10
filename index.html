@@ -6,23 +6,22 @@
 <title>BU3 Site Directory</title>
 <style>
   :root{
-    --bg:#0d1017;
-    --bg-elev:#151a23;
-    --bg-elev-2:#1c222d;
-    --border:#2a3040;
-    --border-soft:#232838;
-    --text:#eef1f6;
-    --text-dim:#98a1b3;
-    --text-faint:#5f6779;
-    --company:#5fa8ff;
-    --company-soft:rgba(95,168,255,0.10);
-    --bu3:#ff8a68;
-    --bu3-soft:rgba(255,138,104,0.10);
-    --public:#33e0c7;
-    --public-soft:rgba(51,224,199,0.12);
-    --internal:#ffb648;
-    --internal-soft:rgba(255,182,72,0.12);
-    --danger:#ff6b81;
+    --bg:#0F131B;
+    --card:#171D27;
+    --card-hover:#1D2531;
+    --border:rgba(255,255,255,0.09);
+    --border-soft:rgba(255,255,255,0.05);
+    --text:#F1F5F9;
+    --text-dim:#A7B0BF;
+    --text-faint:#7C8697;
+    --company:#5B8DEF;
+    --company-soft:rgba(91,141,239,0.16);
+    --company-soft-2:rgba(91,141,239,0.07);
+    --bu3:#2ED9C3;
+    --bu3-soft:rgba(46,217,195,0.16);
+    --bu3-soft-2:rgba(46,217,195,0.07);
+    --danger:#FF6B81;
+    --danger-soft:rgba(255,107,129,0.14);
     --radius:12px;
     --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;
     --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
@@ -41,8 +40,8 @@
     position:fixed;
     inset:0;
     background:
-      radial-gradient(circle at 10% -5%, rgba(95,168,255,0.08), transparent 40%),
-      radial-gradient(circle at 92% 0%, rgba(255,138,104,0.07), transparent 40%);
+      radial-gradient(circle at 8% -5%, rgba(91,141,239,0.07), transparent 42%),
+      radial-gradient(circle at 94% 0%, rgba(46,217,195,0.06), transparent 42%);
     pointer-events:none;
     z-index:0;
   }
@@ -50,10 +49,15 @@
     position:relative;
     z-index:1;
     width:100%;
+    max-width:1440px;
     margin:0 auto;
-    padding:20px 24px 36px;
+    padding:20px 24px 30px;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
   }
 
+  /* ---------- Topbar ---------- */
   .topbar{
     display:flex;
     align-items:center;
@@ -64,51 +68,52 @@
   }
   .brand{display:flex;align-items:center;gap:14px;}
   .brand-mark{
-    width:44px;height:44px;flex:none;
+    width:42px;height:42px;flex:none;
     border-radius:11px;
     background:linear-gradient(135deg,var(--company),var(--bu3));
     display:flex;align-items:center;justify-content:center;
     font-family:var(--mono);
     font-weight:800;
-    font-size:15px;
+    font-size:14px;
     color:#0a0c10;
     user-select:none;
   }
   .brand h1{
     margin:0;
-    font-size:24px;
-    letter-spacing:0.2px;
+    font-size:21px;
+    letter-spacing:0.1px;
     font-weight:800;
     display:flex;
     align-items:baseline;
     gap:10px;
+    color:var(--text);
   }
   .brand h1 .total{
     font-family:var(--mono);
-    font-size:13.5px;
+    font-size:12.5px;
     font-weight:600;
     color:var(--text-faint);
   }
   .brand p{
     margin:2px 0 0;
-    font-size:13px;
+    font-size:12.5px;
     color:var(--text-dim);
   }
   .admin-badge{
-    display:none;align-items:center;gap:5px;font-family:var(--mono);font-size:11px;font-weight:700;
-    color:var(--internal);background:var(--internal-soft);padding:4px 10px;border-radius:20px;
+    display:none;align-items:center;gap:5px;font-family:var(--mono);font-size:10.5px;font-weight:700;
+    color:#0F131B;background:linear-gradient(135deg,var(--company),var(--bu3));padding:4px 10px;border-radius:20px;
   }
   body.admin-mode .admin-badge{display:inline-flex;}
   body:not(.admin-mode) .admin-only{display:none !important;}
 
   .topbar .controls{display:flex;gap:10px;align-items:center;}
   .search-wrap{position:relative;display:flex;align-items:center;}
-  .search-wrap svg{position:absolute;left:13px;width:16px;height:16px;color:var(--text-faint);pointer-events:none;}
+  .search-wrap svg{position:absolute;left:14px;width:16px;height:16px;color:var(--text-faint);pointer-events:none;}
   #search{
-    width:240px;background:var(--bg-elev);border:1px solid var(--border);color:var(--text);
-    border-radius:10px;padding:10px 13px 10px 34px;font-size:14px;outline:none;transition:border-color .15s;
+    width:300px;background:var(--card);border:1px solid var(--border-soft);color:var(--text);
+    border-radius:10px;padding:11px 14px 11px 38px;font-size:14px;outline:none;transition:border-color .15s,background .15s;
   }
-  #search:focus{border-color:var(--company);}
+  #search:focus{border-color:var(--company);background:var(--card-hover);}
   #search::placeholder{color:var(--text-faint);}
   .btn{
     border:none;cursor:pointer;border-radius:10px;font-size:14px;font-weight:700;padding:10px 16px;
@@ -119,69 +124,93 @@
   .btn:disabled{opacity:.5;cursor:not-allowed;}
   .btn-primary{background:var(--text);color:#12151b;}
   .btn-primary:hover{opacity:0.88;}
-  .btn-ghost{background:var(--bg-elev);color:var(--text-dim);border:1px solid var(--border);}
-  .btn-ghost:hover{color:var(--text);border-color:#3a4256;}
-  .btn-danger{background:rgba(255,107,129,0.12);color:var(--danger);}
+  .btn-ghost{background:var(--card);color:var(--text-dim);border:1px solid var(--border-soft);}
+  .btn-ghost:hover{color:var(--text);border-color:var(--border);}
+  .btn-danger{background:var(--danger-soft);color:var(--danger);}
   .btn-danger:hover{background:rgba(255,107,129,0.22);}
 
-  /* ---------- Board: column count adapts automatically to the number of groups ---------- */
+  main{flex:1;min-height:0;}
+
+  /* ---------- Board: 2 macro columns (회사 / BU3) ---------- */
   .board{
     display:grid;
-    grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));
-    gap:18px;
+    grid-template-columns:1fr 1fr;
+    gap:22px;
     align-items:start;
   }
-  .col{ --accent:var(--company); }
+  @media (max-width:900px){ .board{grid-template-columns:1fr;} }
 
-  .col-label{
-    font-family:var(--mono);font-size:11.5px;font-weight:700;text-transform:uppercase;
-    letter-spacing:0.07em;color:var(--accent);text-align:center;margin-bottom:7px;
+  .macro{min-width:0;}
+  .macro-head{display:flex;align-items:center;gap:12px;margin-bottom:14px;}
+  .macro-bar{width:4px;height:32px;border-radius:3px;flex:none;background:var(--company);}
+  .macro-bu3 .macro-bar{background:var(--bu3);}
+  .macro-icon{
+    width:34px;height:34px;flex:none;border-radius:9px;display:flex;align-items:center;justify-content:center;
+    background:var(--company-soft-2);color:var(--company);
   }
+  .macro-bu3 .macro-icon{background:var(--bu3-soft-2);color:var(--bu3);}
+  .macro-icon svg{width:17px;height:17px;}
+  .macro-title h2{margin:0;font-size:18px;font-weight:800;color:var(--text);letter-spacing:0.1px;}
+  .macro-title p{margin:1px 0 0;font-size:11.5px;color:var(--text-faint);}
 
-  .hero{border-radius:12px;padding:12px 10px;margin-bottom:12px;text-align:center;}
-  .hero.public{background:var(--public-soft);border:1.5px solid var(--public);color:var(--public);}
-  .hero.internal{background:var(--bg-elev-2);border:1.5px solid var(--border);color:var(--text-dim);}
-  .hero .hname{font-size:15px;font-weight:800;}
-  .hero .hcount{font-family:var(--mono);font-size:11.5px;opacity:0.85;margin-top:2px;}
+  .subsection{margin-bottom:16px;}
+  .subsection:last-child{margin-bottom:0;}
+  .sub-head{
+    display:flex;align-items:center;gap:7px;font-size:12px;font-weight:700;
+    padding:7px 12px;border-radius:8px;margin-bottom:9px;letter-spacing:0.01em;
+  }
+  .sub-head svg{width:13px;height:13px;flex:none;}
+  .sub-head .sub-count{margin-left:auto;font-family:var(--mono);font-weight:700;font-size:11.5px;opacity:.9;}
+  .sub-head.sub-public{background:var(--company-soft);color:var(--company);}
+  .macro-bu3 .sub-head.sub-public{background:var(--bu3-soft);color:var(--bu3);}
+  .sub-head.sub-internal{background:rgba(255,255,255,0.035);color:var(--text-dim);border:1px solid var(--border-soft);}
 
-  .tilegrid{display:flex;flex-wrap:wrap;gap:9px;align-items:flex-start;}
-  .tile-cell{flex:0 0 calc(50% - 4.5px);min-width:0;}
+  .tilegrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;}
+  @media (max-width:1250px){ .tilegrid{grid-template-columns:repeat(2,minmax(0,1fr));} }
+  @media (max-width:900px){ .tilegrid{grid-template-columns:repeat(3,minmax(0,1fr));} }
+  @media (max-width:560px){ .tilegrid{grid-template-columns:repeat(2,minmax(0,1fr));} }
+
+  .tile-cell{min-width:0;}
 
   .tile{
-    width:100%;min-height:88px;border-radius:var(--radius);background:var(--bg-elev);
-    border:1.5px solid var(--border-soft);display:flex;flex-direction:column;align-items:center;justify-content:center;
-    gap:5px;cursor:pointer;position:relative;padding:11px 6px;transition:border-color .15s, transform .1s;
+    width:100%;min-height:82px;border-radius:var(--radius);background:var(--card);
+    border:1px solid var(--border-soft);display:flex;flex-direction:column;align-items:center;justify-content:center;
+    gap:6px;cursor:pointer;position:relative;padding:12px 8px;
+    transition:background .15s, border-color .15s, transform .12s;
   }
-  .tile:hover{border-color:var(--accent);transform:translateY(-1px);}
-  .tile.open{border-color:var(--accent);}
-  .tile .num{font-family:var(--mono);font-size:26px;font-weight:800;color:var(--accent);line-height:1;}
-  .tile .num-row{display:flex;align-items:center;gap:5px;}
-  .tile .num-icon{display:flex;width:16px;height:16px;}
-  .tile .num-icon svg{width:16px;height:16px;}
-  .tile .name{
-    font-size:12.5px;font-weight:700;text-align:center;color:var(--text);text-transform:uppercase;
-    letter-spacing:0.01em;line-height:1.2;
-  }
-  .tile.direct{gap:7px;}
-  .tile.direct .icon{
-    width:30px;height:30px;border-radius:9px;background:var(--bg-elev-2);
-    display:flex;align-items:center;justify-content:center;color:var(--text-dim);
-  }
-  .tile.direct .icon svg{width:15px;height:15px;}
-  .tile.direct .name{font-size:12.5px;text-transform:none;letter-spacing:0;}
+  .tile:hover{background:var(--card-hover);border-color:var(--border);transform:translateY(-2px);}
 
-  .tile-actions{position:absolute;top:6px;right:6px;display:flex;gap:2px;opacity:0;transition:opacity .12s;}
+  .tile .icon-wrap{
+    width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;
+    background:rgba(255,255,255,0.04);color:var(--text-faint);transition:color .15s, background .15s;
+  }
+  .tile .icon-wrap svg{width:15px;height:15px;}
+  .macro-company .tile:hover .icon-wrap{color:var(--company);background:var(--company-soft-2);}
+  .macro-bu3 .tile:hover .icon-wrap{color:var(--bu3);background:var(--bu3-soft-2);}
+
+  .tile .name{
+    font-size:14px;font-weight:600;text-align:center;color:var(--text);
+    line-height:1.25;max-width:100%;
+  }
+
+  .tile .badge{
+    position:absolute;top:7px;right:7px;font-family:var(--mono);font-size:10.5px;font-weight:700;
+    padding:2px 6px;border-radius:20px;background:var(--company-soft);color:var(--company);line-height:1.5;
+  }
+  .macro-bu3 .tile .badge{background:var(--bu3-soft);color:var(--bu3);}
+
+  .tile-actions{position:absolute;top:6px;left:6px;display:flex;gap:2px;opacity:0;transition:opacity .12s;}
   .tile:hover .tile-actions{opacity:1;}
   .icon-btn{
-    width:22px;height:22px;display:flex;align-items:center;justify-content:center;background:none;border:none;
+    width:21px;height:21px;display:flex;align-items:center;justify-content:center;background:none;border:none;
     color:var(--text-faint);cursor:pointer;border-radius:6px;
   }
-  .icon-btn:hover{background:var(--bg-elev-2);color:var(--text);}
+  .icon-btn:hover{background:rgba(255,255,255,0.06);color:var(--text);}
   .icon-btn.danger:hover{color:var(--danger);}
-  .icon-btn svg{width:12.5px;height:12.5px;}
+  .icon-btn svg{width:12px;height:12px;}
 
   .tile-expand{
-    margin-top:6px;background:var(--bg-elev-2);border:1px solid var(--border-soft);border-radius:10px;
+    margin-top:6px;background:rgba(255,255,255,0.03);border:1px solid var(--border-soft);border-radius:10px;
     padding:6px 9px;
   }
   .exp-row{display:flex;align-items:center;gap:5px;padding:5px 0;border-bottom:1px solid var(--border-soft);}
@@ -190,21 +219,24 @@
     flex:1;font-size:12px;font-weight:600;color:var(--text);text-decoration:none;min-width:0;
     white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
   }
-  .exp-row .e-title:hover{color:var(--company);}
+  .macro-company .exp-row .e-title:hover{color:var(--company);}
+  .macro-bu3 .exp-row .e-title:hover{color:var(--bu3);}
   .exp-row .e-actions{display:flex;gap:1px;flex:none;}
   .exp-row .e-actions .icon-btn{width:19px;height:19px;}
   .exp-row .e-actions .icon-btn svg{width:11px;height:11px;}
 
-  .empty{text-align:center;padding:60px 20px;color:var(--text-faint);font-size:14px;}
-  .col .empty{padding:20px 6px;font-size:12px;}
+  .empty{text-align:center;padding:40px 20px;color:var(--text-faint);font-size:13.5px;}
+  .subsection .empty{padding:16px 6px;font-size:12px;}
 
   .results{display:flex;flex-direction:column;gap:10px;}
   .result-card{
-    background:var(--bg-elev);border:1px solid var(--border-soft);border-radius:12px;
+    background:var(--card);border:1px solid var(--border-soft);border-radius:12px;
     padding:14px 16px;display:flex;align-items:center;gap:12px;text-decoration:none;
+    transition:background .15s, border-color .15s;
   }
+  .result-card:hover{background:var(--card-hover);border-color:var(--border);}
   .result-card .r-icon{
-    width:34px;height:34px;flex:none;border-radius:9px;background:var(--bg-elev-2);
+    width:34px;height:34px;flex:none;border-radius:9px;background:rgba(255,255,255,0.04);
     display:flex;align-items:center;justify-content:center;color:var(--text-dim);
   }
   .result-card .r-icon svg{width:16px;height:16px;}
@@ -217,15 +249,15 @@
   .tip svg{width:13px;height:13px;}
   .tip::after{
     content:attr(data-tip);position:absolute;left:50%;bottom:130%;transform:translateX(-50%) translateY(4px);
-    background:#2a3040;color:var(--text);font-size:12px;line-height:1.4;padding:7px 10px;border-radius:8px;
-    width:max-content;max-width:220px;white-space:normal;box-shadow:0 6px 20px rgba(0,0,0,0.4);
+    background:#232B38;color:var(--text);font-size:12px;line-height:1.4;padding:7px 10px;border-radius:8px;
+    width:max-content;max-width:220px;white-space:normal;box-shadow:0 6px 20px rgba(0,0,0,0.5);
     opacity:0;pointer-events:none;transition:opacity .12s, transform .12s;z-index:20;
   }
   .tip:hover::after{opacity:1;transform:translateX(-50%) translateY(0);}
 
   .overlay{position:fixed;inset:0;background:rgba(6,8,12,0.65);display:flex;align-items:center;justify-content:center;z-index:100;padding:20px;}
-  .modal{background:var(--bg-elev);border:1px solid var(--border);border-radius:16px;width:100%;max-width:440px;padding:22px;box-shadow:0 24px 70px rgba(0,0,0,0.55);max-height:86vh;overflow-y:auto;}
-  .modal h2{margin:0 0 4px;font-size:17px;display:flex;align-items:center;justify-content:space-between;}
+  .modal{background:var(--card);border:1px solid var(--border);border-radius:16px;width:100%;max-width:440px;padding:22px;box-shadow:0 24px 70px rgba(0,0,0,0.55);max-height:86vh;overflow-y:auto;}
+  .modal h2{margin:0 0 4px;font-size:17px;display:flex;align-items:center;justify-content:space-between;color:var(--text);}
   .modal-close{
     background:none;border:none;color:var(--text-faint);font-size:22px;line-height:1;cursor:pointer;
     padding:0 2px;border-radius:6px;
@@ -236,7 +268,7 @@
   .field label{display:block;font-size:12px;font-weight:700;color:var(--text-dim);margin-bottom:6px;}
   .field .req{color:var(--bu3);}
   .field input, .field select, .field textarea{
-    width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:9px;
+    width:100%;background:var(--bg);border:1px solid var(--border-soft);color:var(--text);border-radius:9px;
     padding:9px 11px;font-size:14px;font-family:var(--sans);outline:none;
   }
   .field textarea{resize:vertical;min-height:60px;font-family:var(--sans);}
@@ -246,48 +278,17 @@
   .modal-actions{display:flex;justify-content:space-between;align-items:center;margin-top:18px;}
   .modal-actions .right{display:flex;gap:8px;}
 
-  .cat-list{display:flex;flex-direction:column;gap:8px;margin-bottom:16px;}
-  .cat-row{
-    display:flex;align-items:center;gap:10px;background:var(--bg-elev-2);border:1px solid var(--border-soft);
-    border-radius:10px;padding:9px 11px;
-  }
-  .cat-row .swatch{width:14px;height:14px;border-radius:50%;flex:none;}
-  .cat-row .cat-main{font-size:13.5px;font-weight:700;color:var(--text);}
-  .cat-row .cat-sep{color:var(--text-faint);font-size:12px;}
-  .cat-row .cat-access{font-size:13px;color:var(--text-dim);flex:1;min-width:0;}
-  .cat-row .cat-style{
-    font-family:var(--mono);font-size:10.5px;font-weight:700;padding:2px 7px;border-radius:20px;flex:none;
-  }
-  .cat-row .cat-style.public{background:var(--public-soft);color:var(--public);}
-  .cat-row .cat-style.internal{background:var(--internal-soft);color:var(--internal);}
-  .cat-row .cat-actions{display:flex;gap:1px;flex:none;}
-  .cat-empty{text-align:center;color:var(--text-faint);font-size:13px;padding:14px 0;}
-  .swatch-picker{display:flex;gap:8px;flex-wrap:wrap;}
-  .swatch-opt{
-    width:26px;height:26px;border-radius:50%;cursor:pointer;border:2px solid transparent;flex:none;
-    display:flex;align-items:center;justify-content:center;
-  }
-  .swatch-opt.selected{border-color:var(--text);}
-  .swatch-opt svg{width:13px;height:13px;color:#0a0c10;display:none;}
-  .swatch-opt.selected svg{display:block;}
-  .style-toggle{display:flex;gap:8px;}
-  .style-btn{
-    flex:1;background:var(--bg);border:1px solid var(--border);color:var(--text-dim);border-radius:9px;
-    padding:9px 8px;font-size:12.5px;font-weight:700;cursor:pointer;text-align:center;
-  }
-  .style-btn.selected.public{border-color:var(--public);color:var(--public);background:var(--public-soft);}
-  .style-btn.selected.internal{border-color:var(--internal);color:var(--internal);background:var(--internal-soft);}
-  .cat-form-title{font-size:12.5px;font-weight:700;color:var(--text-dim);margin:16px 0 10px;border-top:1px solid var(--border-soft);padding-top:14px;}
-
   .toast{
-    position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(10px);background:var(--bg-elev-2);
+    position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(10px);background:var(--card-hover);
     border:1px solid var(--border);color:var(--text);padding:11px 18px;border-radius:10px;font-size:13.5px;
     opacity:0;pointer-events:none;transition:opacity .2s, transform .2s;z-index:200;
   }
   .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 
+  :focus-visible{outline:2px solid var(--company);outline-offset:2px;}
+
   @media (max-width:760px){
-    .app{padding:16px 14px 32px;}
+    .app{padding:16px 14px 28px;}
     .topbar{flex-direction:column;align-items:stretch;}
     .topbar .controls{width:100%;}
     #search{flex:1;width:auto;}
@@ -310,10 +311,6 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
         <input id="search" placeholder="사이트, 설명 검색…" />
       </div>
-      <button class="btn btn-ghost admin-only" id="manageCatBtn">
-        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
-        카테고리 관리
-      </button>
       <button class="btn btn-primary admin-only" id="addBtn">
         <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M12 5v14M5 12h14"/></svg>
         링크 추가
@@ -348,32 +345,41 @@
     map: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 20l-6 2V6l6-2 6 2 6-2v16l-6 2-6-2z"/><path d="M9 4v16M15 6v16"/></svg>',
     bell: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8a6 6 0 1112 0c0 4 1.5 5.5 2 6.5H4c.5-1 2-2.5 2-6.5z"/><path d="M10 19a2 2 0 004 0"/></svg>',
     calendar: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18M8 3v4M16 3v4"/></svg>',
-    cart: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="20" r="1.4"/><circle cx="17" cy="20" r="1.4"/><path d="M3 4h2l2.5 12h9L19 8H6"/></svg>'
+    cart: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="20" r="1.4"/><circle cx="17" cy="20" r="1.4"/><path d="M3 4h2l2.5 12h9L19 8H6"/></svg>',
+    building: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="1"/><path d="M9 7h1M14 7h1M9 11h1M14 11h1M9 15h1M14 15h1"/><path d="M9 22v-3h6v3"/></svg>',
+    layers: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 21 7 12 12 3 7 12 2"/><polyline points="3 12 12 17 21 12"/><polyline points="3 17 12 22 21 17"/></svg>',
+    globe: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.7 4 6 4 9s-1.5 6.3-4 9c-2.5-2.7-4-6-4-9s1.5-6.3 4-9z"/></svg>',
+    lock: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/></svg>'
   };
 
-  var ICON_META = {
-    'INTEKPLUS Project Portal': {icon:'grid', color:'#5fa8ff'},
-    'CXM': {icon:'message', color:'#5fa8ff'},
-    'CWM': {icon:'shield', color:'#7c9dfb'},
-    'WMS': {icon:'warehouse', color:'#f5a623'},
-    'PMS': {icon:'dashboard', color:'#c77dff'},
-    'iCOMPASS': {icon:'compass', color:'#33e0c7'},
-    'SQR': {icon:'checkcircle', color:'#4ade80'},
-    '회의록': {icon:'filetext', color:'#98a1b3'},
-    '법인카드': {icon:'card', color:'#ffd166'},
-    'MAPS': {icon:'map', color:'#4ade80'},
-    'Vision Alarm Manager': {icon:'bell', color:'#ff6b81'},
-    '출장일정관리': {icon:'calendar', color:'#5fa8ff'},
-    '구매관리': {icon:'cart', color:'#c77dff'},
-    '대시보드': {icon:'dashboard', color:'#ff8a68'}
+  // 그룹명 -> 아이콘 글리프 (색상은 대분류 accent로 통일, 여기서는 형태만 구분)
+  var GROUP_ICON = {
+    'INTEKPLUS Project Portal': 'grid',
+    'CXM': 'message',
+    'CWM': 'shield',
+    'WMS': 'warehouse',
+    'PMS': 'dashboard',
+    'iCOMPASS': 'compass',
+    'SQR': 'checkcircle',
+    '회의록': 'filetext',
+    '법인카드': 'card',
+    'MAPS': 'map',
+    'Vision Alarm Manager': 'bell',
+    '출장일정관리': 'calendar',
+    '구매관리': 'cart',
+    '대시보드': 'dashboard'
   };
-  function getMeta(gname){ return ICON_META[gname] || {icon:'link', color:'#98a1b3'}; }
+  function getIcon(gname){ return GROUP_ICON[gname] || 'link'; }
 
-  var PALETTE = ['#5fa8ff', '#ff8a68', '#33e0c7', '#c77dff', '#ffd166', '#4ade80', '#ff6b81', '#98a1b3'];
+  var MACROS = ['회사', 'BU3'];
+  var MACRO_META = {
+    '회사': {icon:'building', tagline:'회사에서 운영/제공하는 시스템'},
+    'BU3': {icon:'layers', tagline:'BU3에서 자체 개발/운영하는 시스템'}
+  };
+  var ACCESS_TYPES = ['사내+외부', '사내전용'];
 
   var state = {
     links: [],
-    columns: [],
     query: '',
     isAdmin: false,
     openGroups: new Set()
@@ -415,9 +421,8 @@
 
   async function load(){
     try{
-      var results = await Promise.all([ api('/api/links'), api('/api/columns') ]);
-      state.links = results[0].links || [];
-      state.columns = results[1].columns || [];
+      var data = await api('/api/links');
+      state.links = data.links || [];
     }catch(e){
       console.error(e);
       document.getElementById('content').innerHTML = '<div class="empty">데이터를 불러오지 못했습니다. 새로고침해주세요.<br><span style="font-family:var(--mono);font-size:11px;">' + escapeHtml(e.message) + '</span></div>';
@@ -447,55 +452,69 @@
     var q = state.query.trim().toLowerCase();
     if(q){ renderSearchResults(content, q); return; }
 
-    if(state.columns.length === 0){
-      content.innerHTML = '<div class="empty">등록된 카테고리(그룹)가 없습니다.<br>관리자 모드에서 "카테고리 관리"로 그룹을 먼저 추가해주세요.</div>';
-      return;
-    }
-
     var grouped = groupBy(state.links);
     var html = '<div class="board">';
-    state.columns.forEach(function(col){ html += renderColumn(col, grouped); });
+    MACROS.forEach(function(main){ html += renderMacro(main, grouped); });
     html += '</div>';
     content.innerHTML = html;
     bindGridEvents();
   }
 
-  function renderColumn(col, grouped){
-    var groupsMap = (grouped[col.mainCategory] && grouped[col.mainCategory][col.accessType]) || {};
-    var groupNames = Object.keys(groupsMap);
-    var total = 0;
-    groupNames.forEach(function(g){ total += groupsMap[g].length; });
-    var heroClass = col.accessStyle === 'internal' ? 'internal' : 'public';
+  function renderMacro(main, grouped){
+    var meta = MACRO_META[main];
+    var macroClass = main === 'BU3' ? 'macro-bu3' : 'macro-company';
 
-    var tilesHtml;
-    if(groupNames.length === 0){
-      tilesHtml = '<div class="empty">링크 없음</div>';
-    }else{
-      tilesHtml = groupNames.map(function(gname){
-        var items = groupsMap[gname];
-        var inner = items.length === 1 ? renderDirectTile(items[0]) : renderCountTile(col.mainCategory, col.accessType, gname, items);
-        return '<div class="tile-cell">' + inner + '</div>';
-      }).join('');
-    }
+    var subsHtml = ACCESS_TYPES.map(function(access){
+      var groupsMap = (grouped[main] && grouped[main][access]) || {};
+      var groupNames = Object.keys(groupsMap);
+      var total = 0;
+      groupNames.forEach(function(g){ total += groupsMap[g].length; });
+
+      var tilesHtml;
+      if(groupNames.length === 0){
+        tilesHtml = '<div class="empty">링크 없음</div>';
+      }else{
+        tilesHtml = groupNames.map(function(gname){
+          var items = groupsMap[gname];
+          var inner = items.length === 1 ? renderDirectTile(items[0]) : renderCountTile(main, access, gname, items);
+          return '<div class="tile-cell">' + inner + '</div>';
+        }).join('');
+      }
+
+      var subHeadClass = access === '사내전용' ? 'sub-internal' : 'sub-public';
+      var subIcon = access === '사내전용' ? ICONS.lock : ICONS.globe;
+
+      return (
+        '<div class="subsection">' +
+          '<div class="sub-head ' + subHeadClass + '">' + subIcon +
+            '<span>' + escapeHtml(access) + '</span>' +
+            '<span class="sub-count">' + total + '개</span>' +
+          '</div>' +
+          '<div class="tilegrid">' + tilesHtml + '</div>' +
+        '</div>'
+      );
+    }).join('');
 
     return (
-      '<div class="col" style="--accent:' + escapeHtml(col.mainColor || '#5fa8ff') + ';">' +
-        '<div class="col-label">' + escapeHtml(col.mainCategory) + '</div>' +
-        '<div class="hero ' + heroClass + '">' +
-          '<div class="hname">' + escapeHtml(col.accessType) + '</div>' +
-          '<div class="hcount">' + total + '개</div>' +
+      '<div class="macro ' + macroClass + '">' +
+        '<div class="macro-head">' +
+          '<span class="macro-bar"></span>' +
+          '<div class="macro-icon">' + ICONS[meta.icon] + '</div>' +
+          '<div class="macro-title">' +
+            '<h2>' + escapeHtml(main) + '</h2>' +
+            '<p>' + escapeHtml(meta.tagline) + '</p>' +
+          '</div>' +
         '</div>' +
-        '<div class="tilegrid">' + tilesHtml + '</div>' +
+        subsHtml +
       '</div>'
     );
   }
 
   function renderDirectTile(l){
-    var meta = getMeta(l.group);
-    var iconStyle = 'background:' + meta.color + '1f;color:' + meta.color + ';';
+    var icon = getIcon(l.group);
     return (
       '<div class="tile direct" data-open-url="' + escapeHtml(l.url) + '">' +
-        '<div class="icon" style="' + iconStyle + '">' + ICONS[meta.icon] + '</div>' +
+        '<div class="icon-wrap">' + ICONS[icon] + '</div>' +
         '<div class="name">' + escapeHtml(l.group) + '</div>' +
         '<div class="tile-actions">' +
           (l.desc ? '<span class="tip" data-tip="' + escapeHtml(l.desc) + '">' + ICONS.info + '</span>' : '') +
@@ -509,7 +528,7 @@
   function renderCountTile(main, access, gname, items){
     var key = main + '|' + access + '|' + gname;
     var isOpen = state.openGroups.has(key);
-    var meta = getMeta(gname);
+    var icon = getIcon(gname);
     var rows = items.map(function(l){
       var label = l.sub ? l.sub : gname;
       var tip = l.desc ? '<span class="tip" data-tip="' + escapeHtml(l.desc) + '">' + ICONS.info + '</span>' : '';
@@ -526,10 +545,8 @@
 
     return (
       '<div class="tile' + (isOpen ? ' open' : '') + '" data-toggle-group="' + escapeHtml(key) + '">' +
-        '<div class="num-row">' +
-          '<span class="num-icon" style="color:' + meta.color + ';">' + ICONS[meta.icon] + '</span>' +
-          '<span class="num" style="color:' + meta.color + ';">' + items.length + '</span>' +
-        '</div>' +
+        '<span class="badge">' + items.length + '</span>' +
+        '<div class="icon-wrap">' + ICONS[icon] + '</div>' +
         '<div class="name">' + escapeHtml(gname) + '</div>' +
       '</div>' +
       (isOpen ? '<div class="tile-expand">' + rows + '</div>' : '')
@@ -583,7 +600,7 @@
       var tip = l.desc ? '<span class="tip" data-tip="' + escapeHtml(l.desc) + '">' + ICONS.info + '</span>' : '';
       html +=
         '<div class="result-card" data-id="' + l.id + '">' +
-          '<div class="r-icon">' + ICONS.link + '</div>' +
+          '<div class="r-icon">' + ICONS[getIcon(l.group)] + '</div>' +
           '<div class="r-main">' +
             '<a class="r-title" href="' + escapeHtml(l.url) + '" target="_blank" rel="noopener">' + escapeHtml(label) + '</a> ' + tip +
             '<div class="r-crumb">' + escapeHtml(crumb) + '</div>' +
@@ -623,29 +640,12 @@
     return Object.keys(set);
   }
 
-  function findColumnFor(mainCategory, accessType){
-    return state.columns.find(function(c){ return c.mainCategory === mainCategory && c.accessType === accessType; });
-  }
-
   function openModal(existing){
-    if(state.columns.length === 0){
-      showToast('먼저 "카테고리 관리"에서 그룹을 추가해주세요.');
-      return;
-    }
     var isEdit = !!existing;
-    var data = existing || {mainCategory:'', accessType:'', group:'', sub:'', url:'', desc:''};
+    var data = existing || {mainCategory:'회사', accessType:'사내+외부', group:'', sub:'', url:'', desc:''};
     var root = document.getElementById('modalRoot');
 
-    var currentCol = isEdit ? findColumnFor(data.mainCategory, data.accessType) : null;
-    var initialColId = currentCol ? currentCol.id : state.columns[0].id;
-
-    var columnOptions = state.columns.map(function(c){
-      var label = c.mainCategory + ' · ' + c.accessType;
-      return '<option value="' + c.id + '"' + (c.id === initialColId ? ' selected' : '') + '>' + escapeHtml(label) + '</option>';
-    }).join('');
-
-    var initialCol = state.columns.find(function(c){ return c.id === initialColId; }) || state.columns[0];
-    var groupOptions = existingGroups(initialCol.mainCategory, initialCol.accessType)
+    var groupOptions = existingGroups(data.mainCategory, data.accessType)
       .map(function(g){ return '<option value="' + escapeHtml(g) + '">'; }).join('');
 
     root.innerHTML =
@@ -654,9 +654,21 @@
           '<h2>' + (isEdit ? '링크 수정' : '새 링크 추가') + '<button class="modal-close" id="closeModalX" title="닫기">&times;</button></h2>' +
           '<p class="sub">' + (isEdit ? '이 항목만 수정됩니다.' : '카테고리를 지정하고 링크를 등록하세요.') + '</p>' +
 
-          '<div class="field">' +
-            '<label>카테고리(그룹) <span class="req">*</span></label>' +
-            '<select id="f-column">' + columnOptions + '</select>' +
+          '<div class="field-row">' +
+            '<div class="field">' +
+              '<label>대분류 <span class="req">*</span></label>' +
+              '<select id="f-main">' +
+                '<option value="회사"' + (data.mainCategory==='회사'?' selected':'') + '>회사</option>' +
+                '<option value="BU3"' + (data.mainCategory==='BU3'?' selected':'') + '>BU3</option>' +
+              '</select>' +
+            '</div>' +
+            '<div class="field">' +
+              '<label>접근범위 <span class="req">*</span></label>' +
+              '<select id="f-access">' +
+                '<option value="사내+외부"' + (data.accessType==='사내+외부'?' selected':'') + '>사내+외부</option>' +
+                '<option value="사내전용"' + (data.accessType==='사내전용'?' selected':'') + '>사내전용</option>' +
+              '</select>' +
+            '</div>' +
           '</div>' +
 
           '<div class="field">' +
@@ -690,12 +702,12 @@
         '</div>' +
       '</div>';
 
-    document.getElementById('f-column').addEventListener('change', refreshGroupSuggest);
+    document.getElementById('f-main').addEventListener('change', refreshGroupSuggest);
+    document.getElementById('f-access').addEventListener('change', refreshGroupSuggest);
     function refreshGroupSuggest(){
-      var colId = document.getElementById('f-column').value;
-      var col = state.columns.find(function(c){ return c.id === colId; });
-      if(!col) return;
-      document.getElementById('group-suggest').innerHTML = existingGroups(col.mainCategory, col.accessType)
+      var m = document.getElementById('f-main').value;
+      var a = document.getElementById('f-access').value;
+      document.getElementById('group-suggest').innerHTML = existingGroups(m,a)
         .map(function(g){ return '<option value="' + escapeHtml(g) + '">'; }).join('');
     }
 
@@ -703,19 +715,18 @@
     document.getElementById('cancelModal').addEventListener('click', closeModal);
 
     document.getElementById('saveModal').addEventListener('click', async function(){
-      var colId = document.getElementById('f-column').value;
-      var col = state.columns.find(function(c){ return c.id === colId; });
+      var main = document.getElementById('f-main').value;
+      var access = document.getElementById('f-access').value;
       var group = document.getElementById('f-group').value.trim();
       var sub = document.getElementById('f-sub').value.trim();
       var url = document.getElementById('f-url').value.trim();
       var desc = document.getElementById('f-desc').value.trim();
 
-      if(!col){ showToast('카테고리를 선택해주세요.'); return; }
       if(!group){ showToast('중분류(그룹명)를 입력해주세요.'); return; }
       if(!url){ showToast('URL을 입력해주세요.'); return; }
       if(!/^https?:\/\//i.test(url)){ showToast('URL은 http:// 또는 https:// 로 시작해야 합니다.'); return; }
 
-      var payload = { mainCategory: col.mainCategory, accessType: col.accessType, group: group, sub: sub, url: url, desc: desc };
+      var payload = { mainCategory: main, accessType: access, group: group, sub: sub, url: url, desc: desc };
       var saveBtn = document.getElementById('saveModal');
       saveBtn.disabled = true;
 
@@ -751,164 +762,6 @@
     document.getElementById('modalRoot').innerHTML = '';
   }
 
-  // ---------- Category (column) management ----------
-  function openCategoryModal(editing){
-    var isEdit = !!editing;
-    var data = editing || {mainCategory:'', mainColor: PALETTE[state.columns.length % PALETTE.length], accessType:'', accessStyle:'public'};
-    var root = document.getElementById('modalRoot');
-
-    var listRows = state.columns.map(function(c){
-      return (
-        '<div class="cat-row">' +
-          '<span class="swatch" style="background:' + escapeHtml(c.mainColor) + ';"></span>' +
-          '<span class="cat-main">' + escapeHtml(c.mainCategory) + '</span>' +
-          '<span class="cat-sep">·</span>' +
-          '<span class="cat-access">' + escapeHtml(c.accessType) + '</span>' +
-          '<span class="cat-style ' + (c.accessStyle === 'internal' ? 'internal' : 'public') + '">' + (c.accessStyle === 'internal' ? '제한형' : '공개형') + '</span>' +
-          '<div class="cat-actions">' +
-            '<button class="icon-btn cat-edit-btn" data-id="' + c.id + '" title="수정">' + ICONS.edit + '</button>' +
-            '<button class="icon-btn danger cat-del-btn" data-id="' + c.id + '" title="삭제">' + ICONS.trash + '</button>' +
-          '</div>' +
-        '</div>'
-      );
-    }).join('') || '<div class="cat-empty">등록된 그룹이 없습니다.</div>';
-
-    var swatches = PALETTE.map(function(color){
-      var sel = color === data.mainColor;
-      return (
-        '<div class="swatch-opt' + (sel ? ' selected' : '') + '" data-color="' + color + '" style="background:' + color + ';">' +
-          ICONS.checkcircle +
-        '</div>'
-      );
-    }).join('');
-
-    root.innerHTML =
-      '<div class="overlay" id="overlay">' +
-        '<div class="modal">' +
-          '<h2>카테고리 관리<button class="modal-close" id="closeCatX" title="닫기">&times;</button></h2>' +
-          '<p class="sub">대분류 × 접근범위 조합으로 화면에 보이는 그룹(박스 열)을 관리합니다. 그룹을 삭제하면 소속된 링크도 함께 삭제됩니다.</p>' +
-
-          '<div class="cat-list">' + listRows + '</div>' +
-
-          '<div class="cat-form-title">' + (isEdit ? '그룹 수정' : '새 그룹 추가') + '</div>' +
-
-          '<div class="field">' +
-            '<label>대분류명 <span class="req">*</span></label>' +
-            '<input id="cf-main" list="main-suggest" value="' + escapeHtml(data.mainCategory) + '" placeholder="예: BU1, BU2, 회사…" />' +
-            '<datalist id="main-suggest">' + mainCategorySuggestOptions() + '</datalist>' +
-          '</div>' +
-
-          '<div class="field">' +
-            '<label>대분류 색상</label>' +
-            '<div class="swatch-picker" id="cf-color-picker">' + swatches + '</div>' +
-          '</div>' +
-
-          '<div class="field">' +
-            '<label>접근범위명 <span class="req">*</span></label>' +
-            '<input id="cf-access" list="access-suggest" value="' + escapeHtml(data.accessType) + '" placeholder="예: 사내+외부, 사내전용…" />' +
-            '<datalist id="access-suggest">' + accessTypeSuggestOptions() + '</datalist>' +
-          '</div>' +
-
-          '<div class="field">' +
-            '<label>표시 스타일</label>' +
-            '<div class="style-toggle">' +
-              '<div class="style-btn public' + (data.accessStyle !== 'internal' ? ' selected' : '') + '" data-style="public">공개형 (사내+외부 느낌)</div>' +
-              '<div class="style-btn internal' + (data.accessStyle === 'internal' ? ' selected' : '') + '" data-style="internal">제한형 (사내전용 느낌)</div>' +
-            '</div>' +
-          '</div>' +
-
-          '<div class="modal-actions">' +
-            '<span></span>' +
-            '<div class="right">' +
-              '<button class="btn btn-ghost" id="closeCatBtn">닫기</button>' +
-              '<button class="btn btn-primary" id="saveCatBtn">' + (isEdit ? '수정 저장' : '그룹 추가') + '</button>' +
-            '</div>' +
-          '</div>' +
-        '</div>' +
-      '</div>';
-
-    var selectedColor = data.mainColor;
-    var selectedStyle = data.accessStyle === 'internal' ? 'internal' : 'public';
-
-    root.querySelectorAll('.swatch-opt').forEach(function(el){
-      el.addEventListener('click', function(){
-        root.querySelectorAll('.swatch-opt').forEach(function(s){ s.classList.remove('selected'); });
-        el.classList.add('selected');
-        selectedColor = el.dataset.color;
-      });
-    });
-    root.querySelectorAll('.style-btn').forEach(function(el){
-      el.addEventListener('click', function(){
-        root.querySelectorAll('.style-btn').forEach(function(s){ s.classList.remove('selected'); });
-        el.classList.add('selected');
-        selectedStyle = el.dataset.style;
-      });
-    });
-
-    document.getElementById('closeCatX').addEventListener('click', closeModal);
-    document.getElementById('closeCatBtn').addEventListener('click', closeModal);
-
-    root.querySelectorAll('.cat-edit-btn').forEach(function(btn){
-      btn.addEventListener('click', function(){
-        var col = state.columns.find(function(c){ return c.id === btn.dataset.id; });
-        if(col) openCategoryModal(col);
-      });
-    });
-    root.querySelectorAll('.cat-del-btn').forEach(function(btn){
-      btn.addEventListener('click', async function(){
-        var col = state.columns.find(function(c){ return c.id === btn.dataset.id; });
-        if(!col) return;
-        var affected = state.links.filter(function(l){ return l.mainCategory === col.mainCategory && l.accessType === col.accessType; }).length;
-        var msg = '"' + col.mainCategory + ' · ' + col.accessType + '" 그룹을 삭제할까요?' +
-          (affected > 0 ? ('\n이 그룹에 속한 링크 ' + affected + '개도 함께 삭제됩니다.') : '');
-        if(!confirm(msg)) return;
-        try{
-          await api('/api/columns/' + encodeURIComponent(col.id), { method:'DELETE' });
-          showToast('그룹을 삭제했습니다.');
-          await load();
-          openCategoryModal(null);
-        }catch(err){
-          showToast(err.message || '삭제에 실패했습니다.');
-        }
-      });
-    });
-
-    document.getElementById('saveCatBtn').addEventListener('click', async function(){
-      var mainCategory = document.getElementById('cf-main').value.trim();
-      var accessType = document.getElementById('cf-access').value.trim();
-      if(!mainCategory || !accessType){ showToast('대분류명과 접근범위명을 입력해주세요.'); return; }
-
-      var payload = { mainCategory: mainCategory, mainColor: selectedColor, accessType: accessType, accessStyle: selectedStyle };
-      var btn = document.getElementById('saveCatBtn');
-      btn.disabled = true;
-      try{
-        if(isEdit){
-          await api('/api/columns/' + encodeURIComponent(editing.id), { method:'PUT', body:JSON.stringify(payload) });
-          showToast('그룹을 수정했습니다.');
-        }else{
-          await api('/api/columns', { method:'POST', body:JSON.stringify(payload) });
-          showToast('그룹을 추가했습니다.');
-        }
-        await load();
-        openCategoryModal(null);
-      }catch(err){
-        btn.disabled = false;
-        showToast(err.message || '저장에 실패했습니다.');
-      }
-    });
-  }
-
-  function mainCategorySuggestOptions(){
-    var set = {};
-    state.columns.forEach(function(c){ set[c.mainCategory] = true; });
-    return Object.keys(set).map(function(m){ return '<option value="' + escapeHtml(m) + '">'; }).join('');
-  }
-  function accessTypeSuggestOptions(){
-    var set = {};
-    state.columns.forEach(function(c){ set[c.accessType] = true; });
-    return Object.keys(set).map(function(a){ return '<option value="' + escapeHtml(a) + '">'; }).join('');
-  }
-
   document.getElementById('brandMark').addEventListener('click', function(e){
     if(e.ctrlKey || e.metaKey){
       e.preventDefault();
@@ -916,7 +769,6 @@
     }
   });
   document.getElementById('addBtn').addEventListener('click', function(){ openModal(null); });
-  document.getElementById('manageCatBtn').addEventListener('click', function(){ openCategoryModal(null); });
   document.getElementById('search').addEventListener('input', function(e){
     state.query = e.target.value;
     render();
