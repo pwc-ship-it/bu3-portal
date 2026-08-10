@@ -22,6 +22,10 @@
     --bu3-soft-2:rgba(46,217,195,0.07);
     --danger:#FF6B81;
     --danger-soft:rgba(255,107,129,0.14);
+    --internal:#F0975A;
+    --internal-soft:rgba(240,151,90,0.18);
+    --pin:#FFC94D;
+    --pin-soft:rgba(255,201,77,0.10);
     --radius:12px;
     --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;
     --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
@@ -49,9 +53,9 @@
     position:relative;
     z-index:1;
     width:100%;
-    max-width:1440px;
+    max-width:1800px;
     margin:0 auto;
-    padding:20px 24px 30px;
+    padding:20px 32px 30px;
     min-height:100vh;
     display:flex;
     flex-direction:column;
@@ -110,8 +114,8 @@
   .search-wrap{position:relative;display:flex;align-items:center;}
   .search-wrap svg{position:absolute;left:14px;width:16px;height:16px;color:var(--text-faint);pointer-events:none;}
   #search{
-    width:300px;background:var(--card);border:1px solid var(--border-soft);color:var(--text);
-    border-radius:10px;padding:11px 14px 11px 38px;font-size:14px;outline:none;transition:border-color .15s,background .15s;
+    width:340px;background:var(--card);border:1px solid var(--border-soft);color:var(--text);
+    border-radius:10px;padding:12px 14px 12px 38px;font-size:15px;outline:none;transition:border-color .15s,background .15s;
   }
   #search:focus{border-color:var(--company);background:var(--card-hover);}
   #search::placeholder{color:var(--text-faint);}
@@ -149,23 +153,26 @@
     background:var(--company-soft-2);color:var(--company);
   }
   .macro-bu3 .macro-icon{background:var(--bu3-soft-2);color:var(--bu3);}
-  .macro-icon svg{width:17px;height:17px;}
-  .macro-title h2{margin:0;font-size:18px;font-weight:800;color:var(--text);letter-spacing:0.1px;}
-  .macro-title p{margin:1px 0 0;font-size:11.5px;color:var(--text-faint);}
+  .macro-icon svg{width:18px;height:18px;}
+  .macro-title h2{margin:0;font-size:21px;font-weight:800;color:var(--text);letter-spacing:0.1px;}
+  .macro-title p{margin:1px 0 0;font-size:12.5px;color:var(--text-faint);}
 
-  .subsection{margin-bottom:16px;}
+  .subsection{margin-bottom:18px;}
   .subsection:last-child{margin-bottom:0;}
   .sub-head{
-    display:flex;align-items:center;gap:7px;font-size:12px;font-weight:700;
-    padding:7px 12px;border-radius:8px;margin-bottom:9px;letter-spacing:0.01em;
+    display:flex;align-items:center;gap:8px;font-size:13.5px;font-weight:800;
+    padding:9px 14px;border-radius:8px;margin-bottom:10px;letter-spacing:0.01em;
   }
-  .sub-head svg{width:13px;height:13px;flex:none;}
-  .sub-head .sub-count{margin-left:auto;font-family:var(--mono);font-weight:700;font-size:11.5px;opacity:.9;}
+  .sub-head svg{width:14px;height:14px;flex:none;}
+  .sub-head .sub-count{margin-left:auto;font-family:var(--mono);font-weight:700;font-size:12.5px;opacity:.9;}
   .sub-head.sub-public{background:var(--company-soft);color:var(--company);}
   .macro-bu3 .sub-head.sub-public{background:var(--bu3-soft);color:var(--bu3);}
-  .sub-head.sub-internal{background:rgba(255,255,255,0.035);color:var(--text-dim);border:1px solid var(--border-soft);}
+  .sub-head.sub-internal{
+    background:var(--internal-soft);color:var(--internal);
+    border:1px solid rgba(240,151,90,0.35);
+  }
 
-  .tilegrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;}
+  .tilegrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;}
   @media (max-width:1250px){ .tilegrid{grid-template-columns:repeat(2,minmax(0,1fr));} }
   @media (max-width:900px){ .tilegrid{grid-template-columns:repeat(3,minmax(0,1fr));} }
   @media (max-width:560px){ .tilegrid{grid-template-columns:repeat(2,minmax(0,1fr));} }
@@ -173,29 +180,50 @@
   .tile-cell{min-width:0;}
 
   .tile{
-    width:100%;min-height:82px;border-radius:var(--radius);background:var(--card);
+    width:100%;min-height:92px;border-radius:var(--radius);background:var(--card);
     border:1px solid var(--border-soft);display:flex;flex-direction:column;align-items:center;justify-content:center;
-    gap:6px;cursor:pointer;position:relative;padding:12px 8px;
-    transition:background .15s, border-color .15s, transform .12s;
+    gap:7px;cursor:pointer;position:relative;padding:14px 10px;
+    transition:background .15s, border-color .15s, transform .12s, box-shadow .15s;
   }
   .tile:hover{background:var(--card-hover);border-color:var(--border);transform:translateY(-2px);}
 
-  .tile .icon-wrap{
-    width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;
-    background:rgba(255,255,255,0.04);color:var(--text-faint);transition:color .15s, background .15s;
+  /* 자주 사용/중요 지정 사이트 강조 */
+  .tile.pinned{
+    border-color:rgba(255,201,77,0.38);
+    background:linear-gradient(180deg, var(--pin-soft), transparent 65%) var(--card);
+    box-shadow:0 0 0 1px rgba(255,201,77,0.08);
   }
-  .tile .icon-wrap svg{width:15px;height:15px;}
+  .tile.pinned:hover{
+    border-color:rgba(255,201,77,0.6);
+    background:linear-gradient(180deg, rgba(255,201,77,0.14), transparent 65%) var(--card-hover);
+  }
+  .tile.pinned .name{font-weight:700;}
+
+  .tile .icon-wrap{
+    width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;
+    background:rgba(255,255,255,0.04);color:var(--text-faint);transition:color .15s, background .15s;
+    position:relative;
+  }
+  .tile .icon-wrap svg{width:16px;height:16px;}
   .macro-company .tile:hover .icon-wrap{color:var(--company);background:var(--company-soft-2);}
   .macro-bu3 .tile:hover .icon-wrap{color:var(--bu3);background:var(--bu3-soft-2);}
 
+  .pin-star{
+    position:absolute;top:-6px;right:-6px;width:16px;height:16px;border-radius:50%;
+    background:var(--pin);color:#221a06;display:flex;align-items:center;justify-content:center;
+    box-shadow:0 0 0 2px var(--card);
+  }
+  .tile:hover .pin-star{box-shadow:0 0 0 2px var(--card-hover);}
+  .pin-star svg{width:9px;height:9px;}
+
   .tile .name{
-    font-size:14px;font-weight:600;text-align:center;color:var(--text);
+    font-size:16px;font-weight:600;text-align:center;color:var(--text);
     line-height:1.25;max-width:100%;
   }
 
   .tile .badge{
-    position:absolute;top:7px;right:7px;font-family:var(--mono);font-size:10.5px;font-weight:700;
-    padding:2px 6px;border-radius:20px;background:var(--company-soft);color:var(--company);line-height:1.5;
+    position:absolute;top:8px;right:8px;font-family:var(--mono);font-size:11px;font-weight:700;
+    padding:3px 7px;border-radius:20px;background:var(--company-soft);color:var(--company);line-height:1.5;
   }
   .macro-bu3 .tile .badge{background:var(--bu3-soft);color:var(--bu3);}
 
@@ -213,12 +241,15 @@
     margin-top:6px;background:rgba(255,255,255,0.03);border:1px solid var(--border-soft);border-radius:10px;
     padding:6px 9px;
   }
-  .exp-row{display:flex;align-items:center;gap:5px;padding:5px 0;border-bottom:1px solid var(--border-soft);}
+  .exp-row{display:flex;align-items:center;gap:6px;padding:6px 0;border-bottom:1px solid var(--border-soft);}
   .exp-row:last-child{border-bottom:none;}
   .exp-row .e-title{
-    flex:1;font-size:12px;font-weight:600;color:var(--text);text-decoration:none;min-width:0;
+    flex:1;font-size:13px;font-weight:600;color:var(--text);text-decoration:none;min-width:0;
     white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
   }
+  .exp-row.pinned-row .e-title{font-weight:800;}
+  .pin-star-inline{width:12px;height:12px;flex:none;color:var(--pin);display:flex;align-items:center;justify-content:center;}
+  .pin-star-inline svg{width:12px;height:12px;}
   .macro-company .exp-row .e-title:hover{color:var(--company);}
   .macro-bu3 .exp-row .e-title:hover{color:var(--bu3);}
   .exp-row .e-actions{display:flex;gap:1px;flex:none;}
@@ -349,7 +380,8 @@
     building: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="1"/><path d="M9 7h1M14 7h1M9 11h1M14 11h1M9 15h1M14 15h1"/><path d="M9 22v-3h6v3"/></svg>',
     layers: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 21 7 12 12 3 7 12 2"/><polyline points="3 12 12 17 21 12"/><polyline points="3 17 12 22 21 17"/></svg>',
     globe: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.7 4 6 4 9s-1.5 6.3-4 9c-2.5-2.7-4-6-4-9s1.5-6.3 4-9z"/></svg>',
-    lock: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/></svg>'
+    lock: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/></svg>',
+    star: '<svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2.5l3.09 6.26 6.91 1.01-5 4.87 1.18 6.87L12 18.02l-6.18 3.49L7 14.64l-5-4.87 6.91-1.01L12 2.5z"/></svg>'
   };
 
   // 그룹명 -> 아이콘 글리프 (색상은 대분류 accent로 통일, 여기서는 형태만 구분)
@@ -370,6 +402,18 @@
     '대시보드': 'dashboard'
   };
   function getIcon(gname){ return GROUP_ICON[gname] || 'link'; }
+
+  // 자주 사용하거나 중요한 것으로 지정된 사이트 (그룹 단위)
+  var PINNED_GROUPS = new Set([
+    'INTEKPLUS Project Portal', 'CXM', 'CWM', 'WMS', 'PMS',
+    'Vision Alarm Manager', '출장일정관리'
+  ]);
+  // 그룹 내부의 특정 세부항목만 중요한 경우 (예: 대시보드 중 CXM/CWM/PMS만)
+  var PINNED_SUBS = {
+    '대시보드': new Set(['CXM(admin)', 'CWM(admin)', 'PMS'])
+  };
+  function isPinnedGroup(gname){ return PINNED_GROUPS.has(gname); }
+  function isPinnedSub(gname, sub){ return !!(PINNED_SUBS[gname] && PINNED_SUBS[gname].has(sub)); }
 
   var MACROS = ['회사', 'BU3'];
   var MACRO_META = {
@@ -512,9 +556,12 @@
 
   function renderDirectTile(l){
     var icon = getIcon(l.group);
+    var pinned = isPinnedGroup(l.group);
     return (
-      '<div class="tile direct" data-open-url="' + escapeHtml(l.url) + '">' +
-        '<div class="icon-wrap">' + ICONS[icon] + '</div>' +
+      '<div class="tile direct' + (pinned ? ' pinned' : '') + '" data-open-url="' + escapeHtml(l.url) + '">' +
+        '<div class="icon-wrap">' + ICONS[icon] +
+          (pinned ? '<span class="pin-star" title="자주 사용하는 주요 시스템">' + ICONS.star + '</span>' : '') +
+        '</div>' +
         '<div class="name">' + escapeHtml(l.group) + '</div>' +
         '<div class="tile-actions">' +
           (l.desc ? '<span class="tip" data-tip="' + escapeHtml(l.desc) + '">' + ICONS.info + '</span>' : '') +
@@ -529,11 +576,14 @@
     var key = main + '|' + access + '|' + gname;
     var isOpen = state.openGroups.has(key);
     var icon = getIcon(gname);
+    var pinned = isPinnedGroup(gname);
     var rows = items.map(function(l){
       var label = l.sub ? l.sub : gname;
+      var rowPinned = isPinnedSub(gname, l.sub);
       var tip = l.desc ? '<span class="tip" data-tip="' + escapeHtml(l.desc) + '">' + ICONS.info + '</span>' : '';
       return (
-        '<div class="exp-row">' +
+        '<div class="exp-row' + (rowPinned ? ' pinned-row' : '') + '">' +
+          (rowPinned ? '<span class="pin-star-inline" title="자주 사용하는 주요 시스템">' + ICONS.star + '</span>' : '') +
           '<a class="e-title" href="' + escapeHtml(l.url) + '" target="_blank" rel="noopener">' + escapeHtml(label) + '</a>' + tip +
           '<div class="e-actions admin-only">' +
             '<button class="icon-btn edit-exp-btn" data-id="' + l.id + '" title="수정">' + ICONS.edit + '</button>' +
@@ -544,9 +594,11 @@
     }).join('');
 
     return (
-      '<div class="tile' + (isOpen ? ' open' : '') + '" data-toggle-group="' + escapeHtml(key) + '">' +
+      '<div class="tile' + (isOpen ? ' open' : '') + (pinned ? ' pinned' : '') + '" data-toggle-group="' + escapeHtml(key) + '">' +
         '<span class="badge">' + items.length + '</span>' +
-        '<div class="icon-wrap">' + ICONS[icon] + '</div>' +
+        '<div class="icon-wrap">' + ICONS[icon] +
+          (pinned ? '<span class="pin-star" title="자주 사용하는 주요 시스템">' + ICONS.star + '</span>' : '') +
+        '</div>' +
         '<div class="name">' + escapeHtml(gname) + '</div>' +
       '</div>' +
       (isOpen ? '<div class="tile-expand">' + rows + '</div>' : '')
