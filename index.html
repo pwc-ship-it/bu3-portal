@@ -178,6 +178,9 @@
   @media (max-width:560px){ .tilegrid{grid-template-columns:repeat(2,minmax(0,1fr));} }
 
   .tile-cell{min-width:0;}
+  body.admin-mode .tile-cell[draggable="true"]{cursor:grab;}
+  body.admin-mode .exp-row[draggable="true"]{cursor:grab;}
+  .tile-cell.dragging, .exp-row.dragging{opacity:.35;}
 
   .tile{
     width:100%;min-height:92px;border-radius:var(--radius);background:var(--card);
@@ -235,6 +238,8 @@
   }
   .icon-btn:hover{background:rgba(255,255,255,0.06);color:var(--text);}
   .icon-btn.danger:hover{color:var(--danger);}
+  .icon-btn.pin-toggle-btn.active{color:var(--pin);}
+  .icon-btn.pin-toggle-btn:hover{color:var(--pin);}
   .icon-btn svg{width:12px;height:12px;}
 
   .tile-expand{
@@ -381,7 +386,8 @@
     layers: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 21 7 12 12 3 7 12 2"/><polyline points="3 12 12 17 21 12"/><polyline points="3 17 12 22 21 17"/></svg>',
     globe: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.7 4 6 4 9s-1.5 6.3-4 9c-2.5-2.7-4-6-4-9s1.5-6.3 4-9z"/></svg>',
     lock: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/></svg>',
-    star: '<svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2.5l3.09 6.26 6.91 1.01-5 4.87 1.18 6.87L12 18.02l-6.18 3.49L7 14.64l-5-4.87 6.91-1.01L12 2.5z"/></svg>'
+    star: '<svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2.5l3.09 6.26 6.91 1.01-5 4.87 1.18 6.87L12 18.02l-6.18 3.49L7 14.64l-5-4.87 6.91-1.01L12 2.5z"/></svg>',
+    starOutline: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2.5l3.09 6.26 6.91 1.01-5 4.87 1.18 6.87L12 18.02l-6.18 3.49L7 14.64l-5-4.87 6.91-1.01L12 2.5z"/></svg>'
   };
 
   // 그룹명 -> 아이콘 글리프 (색상은 대분류 accent로 통일, 여기서는 형태만 구분)
@@ -403,17 +409,21 @@
   };
   function getIcon(gname){ return GROUP_ICON[gname] || 'link'; }
 
-  // 자주 사용하거나 중요한 것으로 지정된 사이트 (그룹 단위)
-  var PINNED_GROUPS = new Set([
+  // 즐겨찾기는 링크별 pinned 값으로 관리 (관리자 모드에서 별 아이콘으로 On/Off).
+  // 아래 LEGACY_* 는 pinned 값이 아직 없는 기존 데이터(예전 하드코딩 방식)에 대한 기본값이며,
+  // 한 번이라도 토글하면 그 링크는 명시적인 pinned 값을 갖게 되어 이 기본값을 더 이상 참조하지 않는다.
+  var LEGACY_PINNED_GROUPS = new Set([
     'INTEKPLUS Project Portal', 'CXM', 'CWM', 'WMS', 'PMS',
     'Vision Alarm Manager', '출장일정관리'
   ]);
-  // 그룹 내부의 특정 세부항목만 중요한 경우 (예: 대시보드 중 CXM/CWM/PMS만)
-  var PINNED_SUBS = {
+  var LEGACY_PINNED_SUBS = {
     '대시보드': new Set(['CXM(admin)', 'CWM(admin)', 'PMS'])
   };
-  function isPinnedGroup(gname){ return PINNED_GROUPS.has(gname); }
-  function isPinnedSub(gname, sub){ return !!(PINNED_SUBS[gname] && PINNED_SUBS[gname].has(sub)); }
+  function isPinned(l){
+    if(typeof l.pinned === 'boolean') return l.pinned;
+    return LEGACY_PINNED_GROUPS.has(l.group) || !!(LEGACY_PINNED_SUBS[l.group] && LEGACY_PINNED_SUBS[l.group].has(l.sub));
+  }
+  function groupHasPinned(items){ return items.some(isPinned); }
 
   var MACROS = ['회사', 'BU3'];
   var MACRO_META = {
@@ -452,6 +462,7 @@
     state.isAdmin = !state.isAdmin;
     try{ localStorage.setItem('bu3_admin', state.isAdmin ? '1' : '0'); }catch(e){}
     applyAdminClass();
+    render();
     showToast(state.isAdmin ? '관리자 모드로 전환했습니다.' : '일반(보기) 모드로 전환했습니다.');
   }
 
@@ -521,7 +532,8 @@
         tilesHtml = groupNames.map(function(gname){
           var items = groupsMap[gname];
           var inner = items.length === 1 ? renderDirectTile(items[0]) : renderCountTile(main, access, gname, items);
-          return '<div class="tile-cell">' + inner + '</div>';
+          var ids = items.map(function(l){ return l.id; }).join(',');
+          return '<div class="tile-cell"' + (state.isAdmin ? ' draggable="true"' : '') + ' data-drag-ids="' + ids + '">' + inner + '</div>';
         }).join('');
       }
 
@@ -554,9 +566,15 @@
     );
   }
 
+  function pinToggleBtn(l){
+    var pinned = isPinned(l);
+    return '<button class="icon-btn admin-only pin-toggle-btn' + (pinned ? ' active' : '') + '" data-id="' + l.id + '" title="' +
+      (pinned ? '즐겨찾기 해제' : '즐겨찾기 추가') + '">' + (pinned ? ICONS.star : ICONS.starOutline) + '</button>';
+  }
+
   function renderDirectTile(l){
     var icon = getIcon(l.group);
-    var pinned = isPinnedGroup(l.group);
+    var pinned = isPinned(l);
     return (
       '<div class="tile direct' + (pinned ? ' pinned' : '') + '" data-open-url="' + escapeHtml(l.url) + '">' +
         '<div class="icon-wrap">' + ICONS[icon] +
@@ -565,6 +583,7 @@
         '<div class="name">' + escapeHtml(l.group) + '</div>' +
         '<div class="tile-actions">' +
           (l.desc ? '<span class="tip" data-tip="' + escapeHtml(l.desc) + '">' + ICONS.info + '</span>' : '') +
+          pinToggleBtn(l) +
           '<button class="icon-btn admin-only edit-tile-btn" data-id="' + l.id + '" title="수정">' + ICONS.edit + '</button>' +
           '<button class="icon-btn admin-only danger del-tile-btn" data-id="' + l.id + '" title="삭제">' + ICONS.trash + '</button>' +
         '</div>' +
@@ -576,16 +595,17 @@
     var key = main + '|' + access + '|' + gname;
     var isOpen = state.openGroups.has(key);
     var icon = getIcon(gname);
-    var pinned = isPinnedGroup(gname);
+    var pinned = groupHasPinned(items);
     var rows = items.map(function(l){
       var label = l.sub ? l.sub : gname;
-      var rowPinned = isPinnedSub(gname, l.sub);
+      var rowPinned = isPinned(l);
       var tip = l.desc ? '<span class="tip" data-tip="' + escapeHtml(l.desc) + '">' + ICONS.info + '</span>' : '';
       return (
-        '<div class="exp-row' + (rowPinned ? ' pinned-row' : '') + '">' +
+        '<div class="exp-row' + (rowPinned ? ' pinned-row' : '') + '"' + (state.isAdmin ? ' draggable="true"' : '') + ' data-drag-ids="' + l.id + '">' +
           (rowPinned ? '<span class="pin-star-inline" title="자주 사용하는 주요 시스템">' + ICONS.star + '</span>' : '') +
           '<a class="e-title" href="' + escapeHtml(l.url) + '" target="_blank" rel="noopener">' + escapeHtml(label) + '</a>' + tip +
           '<div class="e-actions admin-only">' +
+            pinToggleBtn(l) +
             '<button class="icon-btn edit-exp-btn" data-id="' + l.id + '" title="수정">' + ICONS.edit + '</button>' +
             '<button class="icon-btn danger del-exp-btn" data-id="' + l.id + '" title="삭제">' + ICONS.trash + '</button>' +
           '</div>' +
@@ -634,6 +654,88 @@
         if(ok) render();
       });
     });
+    document.querySelectorAll('.pin-toggle-btn').forEach(function(btn){
+      btn.addEventListener('click', async function(e){
+        e.stopPropagation();
+        var link = state.links.find(function(l){ return l.id === btn.dataset.id; });
+        if(!link) return;
+        var newVal = !isPinned(link);
+        try{
+          var result = await api('/api/links/' + encodeURIComponent(link.id), { method: 'PATCH', body: JSON.stringify({ pinned: newVal }) });
+          link.pinned = result.link.pinned;
+          render();
+        }catch(err){
+          showToast(err.message || '즐겨찾기 변경에 실패했습니다.');
+        }
+      });
+    });
+    if(state.isAdmin){
+      bindDragReorder('.tilegrid', '.tile-cell');
+      bindDragReorder('.tile-expand', '.exp-row');
+    }
+  }
+
+  // 관리자 모드에서 같은 그리드(.tilegrid) / 같은 펼침목록(.tile-expand) 안에서만
+  // 드래그로 순서를 바꿀 수 있게 해주는 최소 구현 (네이티브 HTML5 Drag & Drop)
+  function getDragAfterElement(container, selector, x, y){
+    var els = Array.prototype.slice.call(container.querySelectorAll(selector))
+      .filter(function(el){ return !el.classList.contains('dragging'); });
+    var closest = null, closestDist = Infinity, before = false;
+    els.forEach(function(el){
+      var box = el.getBoundingClientRect();
+      var cx = box.left + box.width / 2, cy = box.top + box.height / 2;
+      var dist = Math.hypot(x - cx, y - cy);
+      if(dist < closestDist){
+        closestDist = dist;
+        closest = el;
+        var sameRow = Math.abs(y - cy) < box.height / 2;
+        before = sameRow ? (x < cx) : (y < cy);
+      }
+    });
+    if(!closest) return null;
+    return before ? closest : closest.nextElementSibling;
+  }
+
+  function bindDragReorder(containerSelector, itemSelector){
+    document.querySelectorAll(containerSelector).forEach(function(container){
+      container.querySelectorAll(itemSelector).forEach(function(item){
+        item.addEventListener('dragstart', function(e){
+          e.stopPropagation(); // 중첩된 tile-cell/tile-expand 드래그가 서로 간섭하지 않도록 차단
+          item.classList.add('dragging');
+          e.dataTransfer.effectAllowed = 'move';
+          e.dataTransfer.setData('text/plain', '');
+        });
+        item.addEventListener('dragend', function(e){
+          e.stopPropagation();
+          item.classList.remove('dragging');
+          var ids = Array.prototype.slice.call(container.querySelectorAll(itemSelector))
+            .map(function(el){ return el.dataset.dragIds; }).join(',').split(',').filter(Boolean);
+          persistReorder(ids);
+        });
+      });
+      container.addEventListener('dragover', function(e){
+        var dragging = container.querySelector('.dragging');
+        if(!dragging) return;
+        e.preventDefault();
+        e.stopPropagation();
+        var after = getDragAfterElement(container, itemSelector, e.clientX, e.clientY);
+        if(after == null) container.appendChild(dragging);
+        else if(after !== dragging) container.insertBefore(dragging, after);
+      });
+    });
+  }
+
+  function persistReorder(newIds){
+    if(!newIds || newIds.length < 2) return;
+    var idSet = {};
+    newIds.forEach(function(id){ idSet[id] = true; });
+    var byId = {};
+    state.links.forEach(function(l){ byId[l.id] = l; });
+    var queue = newIds.slice();
+    state.links = state.links.map(function(l){ return idSet[l.id] ? byId[queue.shift()] : l; });
+    render();
+    api('/api/links', { method: 'PUT', body: JSON.stringify({ order: state.links.map(function(l){ return l.id; }) }) })
+      .catch(function(err){ showToast(err.message || '순서 저장에 실패했습니다.'); });
   }
 
   function renderSearchResults(content, q){
@@ -658,6 +760,7 @@
             '<div class="r-crumb">' + escapeHtml(crumb) + '</div>' +
           '</div>' +
           '<div class="r-actions admin-only">' +
+            pinToggleBtn(l) +
             '<button class="icon-btn edit-tile-btn" data-id="' + l.id + '" title="수정">' + ICONS.edit + '</button>' +
             '<button class="icon-btn danger del-tile-btn" data-id="' + l.id + '" title="삭제">' + ICONS.trash + '</button>' +
           '</div>' +

@@ -57,7 +57,26 @@ module.exports = async function handler(req, res) {
       return;
     }
 
-    res.setHeader('Allow', 'GET, POST');
+    if (req.method === 'PUT') {
+      const body = req.body || {};
+      const order = body.order;
+      if (!Array.isArray(order)) {
+        res.status(400).json({ error: 'order 배열이 필요합니다.' });
+        return;
+      }
+
+      let links = (await kv.get(KEY)) || seedLinks();
+      const byId = {};
+      links.forEach((l) => { byId[l.id] = l; });
+      const reordered = order.map((id) => byId[id]).filter(Boolean);
+      links.forEach((l) => { if (!order.includes(l.id)) reordered.push(l); });
+
+      await kv.set(KEY, reordered);
+      res.status(200).json({ links: reordered });
+      return;
+    }
+
+    res.setHeader('Allow', 'GET, POST, PUT');
     res.status(405).json({ error: 'Method not allowed' });
   } catch (err) {
     console.error(err);

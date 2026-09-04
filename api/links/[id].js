@@ -55,6 +55,18 @@ module.exports = async function handler(req, res) {
       return;
     }
 
+    if (req.method === 'PATCH') {
+      const body = req.body || {};
+      if (typeof body.pinned !== 'boolean') {
+        res.status(400).json({ error: 'pinned(boolean) 값이 필요합니다.' });
+        return;
+      }
+      links[idx] = { ...links[idx], pinned: body.pinned };
+      await kv.set(KEY, links);
+      res.status(200).json({ link: links[idx] });
+      return;
+    }
+
     if (req.method === 'DELETE') {
       const removed = links[idx];
       links.splice(idx, 1);
@@ -63,7 +75,7 @@ module.exports = async function handler(req, res) {
       return;
     }
 
-    res.setHeader('Allow', 'PUT, DELETE');
+    res.setHeader('Allow', 'PUT, PATCH, DELETE');
     res.status(405).json({ error: 'Method not allowed' });
   } catch (err) {
     console.error(err);
