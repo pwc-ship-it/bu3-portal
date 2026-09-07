@@ -36,4 +36,16 @@ function seedLinks() {
   return raw.map((l) => ({ id: uid(), ...l }));
 }
 
-module.exports = { seedLinks, uid };
+// 대분류(mainCategory) x 접근범위(accessType) 조합 = 화면에 보이는 "그룹(컬럼)" 정의
+// 지금까지 코드에 하드코딩되어 있던 4개 그룹을 그대로 초기값으로 사용
+function seedColumns() {
+  const raw = [
+    { mainCategory: '회사', mainColor: '#5fa8ff', accessType: '사내+외부', accessStyle: 'public' },
+    { mainCategory: '회사', mainColor: '#5fa8ff', accessType: '사내전용', accessStyle: 'internal' },
+    { mainCategory: 'BU3', mainColor: '#ff8a68', accessType: '사내+외부', accessStyle: 'public' },
+    { mainCategory: 'BU3', mainColor: '#ff8a68', accessType: '사내전용', accessStyle: 'internal' }
+  ];
+  return raw.map((c) => ({ id: uid(), ...c }));
+}
+
+module.exports = { seedLinks, seedColumns, uid };

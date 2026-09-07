@@ -3,7 +3,7 @@
 회사 · BU3 사내 시스템 링크를 모아 보여주는 포털입니다.
 - 프론트엔드: 정적 `index.html` (프레임워크 없음)
 - 백엔드: Vercel 서버리스 함수 (`/api/links`)
-- 데이터 저장소: **Vercel KV**
+- 데이터 저장소: **Upstash Redis** (Vercel Marketplace를 통해 연결, 예전 "Vercel KV"의 후속 상품)
 
 ---
 
@@ -31,14 +31,18 @@ git push -u origin main
 5. 배포가 끝나면 `https://your-project.vercel.app` 같은 주소가 생깁니다.
    (이 시점에는 아직 KV가 연결 안 되어 있어서 `/api/links` 호출이 에러가 날 수 있습니다 — 3번 단계까지 마쳐야 정상 동작합니다.)
 
-## 3. Vercel KV 연결하기
+## 3. Upstash Redis 연결하기 (예전 "Vercel KV" 자리)
+
+Vercel은 자체 KV 상품을 없애고, Marketplace를 통해 Upstash Redis를 연결하는 방식으로 바꿨습니다. 기능은 동일합니다.
 
 1. 방금 만든 프로젝트 화면에서 **Storage** 탭 클릭
-2. **Create Database → KV** 선택 (무료 티어로 충분합니다)
-3. 데이터베이스 이름 정하고 만든 뒤, **Connect to Project** 로 지금 이 프로젝트에 연결
-   → `KV_REST_API_URL`, `KV_REST_API_TOKEN` 등 환경변수가 프로젝트에 자동으로 추가됩니다.
-4. 연결 후 우측 상단 **Redeploy** (또는 Deployments 탭에서 최신 배포 옆 `...` → Redeploy)로 한 번 더 배포합니다.
-5. 배포된 URL로 접속해서 링크 목록이 뜨는지 확인합니다. (최초 접속 시 엑셀에서 가져온 기본 25개 링크가 자동으로 채워집니다.)
+2. **Create Database** 클릭
+3. "Marketplace Database Providers" 목록에서 **Upstash — Serverless DB (Redis, Vector, Queue, Search)** 선택
+4. Upstash 계정 연결/로그인 화면이 나오면 진행 (Vercel 계정으로 바로 가입 가능)
+5. Redis 데이터베이스를 새로 만들고, 지금 이 프로젝트에 **Connect**
+   → `KV_REST_API_URL`, `KV_REST_API_TOKEN` 환경변수가 프로젝트에 자동으로 추가됩니다.
+6. 연결 후 **Deployments** 탭 → 최신 배포 옆 `...` → **Redeploy**로 한 번 더 배포합니다.
+7. 배포된 URL로 접속해서 링크 목록이 뜨는지 확인합니다. (최초 접속 시 엑셀에서 가져온 기본 25개 링크가 자동으로 채워집니다.)
 
 ## 4. 접근 범위
 

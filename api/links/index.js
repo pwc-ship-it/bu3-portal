@@ -1,7 +1,13 @@
-const { kv } = require('@vercel/kv');
-const { seedLinks, uid } = require('../_seed');
+const { Redis } = require('@upstash/redis');
+const { seedLinks, seedColumns, uid } = require('../_seed');
 
 const KEY = 'bu3-portal-links';
+const COL_KEY = 'bu3-portal-columns';
+
+const kv = new Redis({
+  url: process.env.KV_REST_API_URL,
+  token: process.env.KV_REST_API_TOKEN
+});
 
 module.exports = async function handler(req, res) {
   try {
@@ -28,6 +34,13 @@ module.exports = async function handler(req, res) {
         return;
       }
 
+      const columns = (await kv.get(COL_KEY)) || seedColumns();
+      const validColumn = columns.find((c) => c.mainCategory === mainCategory && c.accessType === accessType);
+      if (!validColumn) {
+        res.status(400).json({ error: '존재하지 않는 카테고리(그룹)입니다. 먼저 카테고리 관리에서 그룹을 추가해주세요.' });
+        return;
+      }
+
       let links = (await kv.get(KEY)) || seedLinks();
       const newLink = {
         id: uid(),
@@ -44,7 +57,26 @@ module.exports = async function handler(req, res) {
       return;
     }
 
-    res.setHeader('Allow', 'GET, POST');
+    if (req.method === 'PUT') {
+      const body = req.body || {};
+      const order = body.order;
+      if (!Array.isArray(order)) {
+        res.status(400).json({ error: 'order 배열이 필요합니다.' });
+        return;
+      }
+
+      let links = (await kv.get(KEY)) || seedLinks();
+      const byId = {};
+      links.forEach((l) => { byId[l.id] = l; });
+      const reordered = order.map((id) => byId[id]).filter(Boolean);
+      links.forEach((l) => { if (!order.includes(l.id)) reordered.push(l); });
+
+      await kv.set(KEY, reordered);
+      res.status(200).json({ links: reordered });
+      return;
+    }
+
+    res.setHeader('Allow', 'GET, POST, PUT');
     res.status(405).json({ error: 'Method not allowed' });
   } catch (err) {
     console.error(err);
